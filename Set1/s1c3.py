@@ -1,7 +1,6 @@
+# Matasano Crypto Challenges
+# Set 1, Challenge 3 - Single-byte XOR cipher
 #
-# S1C3.py
-#
-
 hex_data = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
 xor_enc_data = bytes.fromhex( hex_data )
 
@@ -34,5 +33,9 @@ if __name__ == '__main__':
             max_key = i
             max_result = result
 
-    print( str(max_key) + " : " + str( max_score ) + " : " + str(max_result) )
+    # Display results.
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 3 - Single-byte XOR cipher')
+    print('------------------------------------------')
+    print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
 

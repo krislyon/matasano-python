@@ -1,5 +1,5 @@
-#
-# S1C4.py
+# Matasano Crypto Challenges
+# Set 1, Challenge 4 - Detect single-character XOR
 #
 
 hex_data = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736"
@@ -18,7 +18,6 @@ def readable_ascii_score( buf ):
             score = score + 1
     return score / len(buf)
 
-
 def load_data( filename ):
     with open( filename, 'r') as file:
         # Read all lines into a list
@@ -27,7 +26,6 @@ def load_data( filename ):
 
 
 if __name__ == '__main__':
-
     filedata = load_data('s1c4.dat')
     max_score = 0
     max_key = 0
@@ -45,5 +43,9 @@ if __name__ == '__main__':
                 max_key = i
                 max_result = result
 
-    print( str(max_key) + " : " + str( max_score ) + " : " + str(max_result) )
+    # Display results
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 4 - Detect single-character XOR')
+    print('------------------------------------------')
+    print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
 

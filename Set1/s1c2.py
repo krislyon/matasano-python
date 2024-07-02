@@ -19,6 +19,7 @@ if __name__ == '__main__':
     xorkey =  '686974207468652062756c6c277320657965'
     result = fixed_xor( indata, xorkey )
 
+    # Display results
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 2 - Fixed XOR')
     print('------------------------------')

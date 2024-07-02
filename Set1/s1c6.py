@@ -1,3 +1,6 @@
+# Matasano Crypto Challenges
+# Set 1, Challenge 6 - Break repeating-key XOR
+#
 import base64
 
 
