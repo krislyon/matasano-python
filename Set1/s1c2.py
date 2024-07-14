@@ -8,21 +8,21 @@
 # ... should produce:
 #
 # 746865206b696420646f6e277420706c6179
-
-def fixed_xor( buf1, buf2 ):
-    return bytes([b1 ^ b2 for b1, b2 in zip(bytes.fromhex(buf1), bytes.fromhex(buf2))])
+import sys
+sys.path.append('../utils')
+from xor_utils import buffer_xor
 
 if __name__ == '__main__':
 
     expected = '746865206b696420646f6e277420706c6179'
-    indata =  '1c0111001f010100061a024b53535009181c'
-    xorkey =  '686974207468652062756c6c277320657965'
-    result = fixed_xor( indata, xorkey )
+    indata =   '1c0111001f010100061a024b53535009181c'
+    xorkey =   '686974207468652062756c6c277320657965'
 
-    # Display results
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 2 - Fixed XOR')
     print('------------------------------')
+
+    result = buffer_xor( bytes.fromhex(indata), bytes.fromhex(xorkey) )
 
     print('Input Data:  ' + indata )
     print('Key Data:    ' + xorkey )
