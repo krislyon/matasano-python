@@ -1,8 +1,8 @@
 # Matasano Crypto Challenges
-# Set 2, Challenge 1 - Convert hex to base64
+# Set 2, Challenge 9 - Convert hex to base64
 #
 print('Matasano Crypto Challenges')
-print('Set 2, Challenge 1 - Implement PKCS#7 Padding')
+print('Set 2, Challenge 9 - Implement PKCS#7 Padding')
 print('------------------------------------------')
 
 def pkcs7_pad( plaintext:bytes, blocksize:int=16 ) -> bytes:
