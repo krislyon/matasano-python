@@ -5,7 +5,7 @@ from Crypto.Cipher import AES
 import sys
 import base64
 sys.path.append('../utils')
-from block_utils import pkcs7_pad, pkcs7_unpad, split_blocks, encrypt_aes__manual_cbc, decrypt_aes_manual_cbc
+from block_utils import pkcs7_pad, pkcs7_unpad, split_blocks, decrypt_aes_manual_cbc
 from text_utils import hexdump
 
 def load_base64_data( filename: str ) -> bytes:

@@ -47,7 +47,7 @@ def encrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
     encrypted = cipher.encrypt(ciphertext)
     return encrypted
 
-def encrypt_aes__manual_cbc(plaintext: bytes, key: bytes, iv: bytes) -> bytes:
+def encrypt_aes_manual_cbc(plaintext: bytes, key: bytes, iv: bytes) -> bytes:
     assert len(key) == 16, "Key must be 16 bytes long for AES-128"
     assert len(iv) == 16, "IV must be 16 bytes long for AES-128"
     encrypted = bytearray()
