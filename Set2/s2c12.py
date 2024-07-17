@@ -1,7 +1,10 @@
+# Matasano Crypto Challenges
+# Set 2, Challenge 12 - Byte-at-a-time ECB decryption (Simple)
+#
 import sys
 import base64
 import random
-from typing import Tuple,Dict,Generator
+from typing import Dict
 sys.path.append('../utils')
 from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb
 from text_utils import hexdump
@@ -95,7 +98,7 @@ def recover_block( blocknum, recovered_data, secretdata, key ):
 
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 10 - Implement CBC mode')
+    print('Set 2, Challenge 12 - Byte-at-a-time ECB decryption (Simple)')
     print('------------------------------------------')
 
     key = random.randbytes(16)
