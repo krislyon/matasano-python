@@ -36,8 +36,7 @@ if __name__ == '__main__':
 
     attack_input = "XXXXXXXXXXXXXXXXXXXXX\x3aadmin\x3ctrue"
     token = create_token( attack_input )
-
-    
+        
     modified_token = bytearray(token)
     modified_token[37] = modified_token[37] ^ 0x3a      
     modified_token[37] = modified_token[37] ^ 0x3b      

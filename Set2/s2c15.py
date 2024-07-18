@@ -19,5 +19,25 @@ try:
 except Exception as e:
     print(e)
 
+try:
+    print( pkcs7_unpad( bytes("AAAABBBBCCCCDDD\x01","utf-8"), True ))
+except Exception as e:
+    print(e)
+
+try:
+    print( pkcs7_unpad( bytes("AAAABBBBCCCCDD\x02\x02","utf-8"), True ))
+except Exception as e:
+    print(e)
+
+
+try:
+    print( pkcs7_unpad( bytes("AAAABBBBCCCCD\x03\x03\x03","utf-8"), True ))
+except Exception as e:
+    print(e)
+
+try:
+    print( pkcs7_unpad( bytes("AAAABBBBCCCCDDDD\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10\x10","utf-8"), True ))
+except Exception as e:
+    print(e)
 
 

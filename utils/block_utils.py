@@ -17,6 +17,9 @@ def pkcs7_unpad( plaintext:bytes, validate:bool=False, blocksize:int=16 ) -> byt
     pad_byte = data[data_length-1]
 
     if validate:
+        if pad_byte > blocksize or pad_byte < 0x01:
+                raise Exception("Plaintext was incorrectly pkcs7 padded.")
+
         for i in range(pad_byte):
             if data[(data_length-1)-i] != pad_byte:
                 raise Exception("Plaintext was incorrectly pkcs7 padded.")
