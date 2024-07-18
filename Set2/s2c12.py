@@ -6,7 +6,7 @@ import base64
 import random
 from typing import Dict, Tuple
 sys.path.append('../utils')
-from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb
+from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb,detect_blockcipher_metrics
 from text_utils import hexdump
 
 def load_base64_data( filename: str ) -> bytes:
@@ -24,34 +24,6 @@ def oracle( attacker_controlled: bytes ) -> bytes:
     data = pkcs7_pad(data)
     ct = encrypt_aes_ecb( data, aeskey )
     return ct
-
-def detect_blocksize():
-    # find first ciphertext blocksize increase (full padding)
-    ctlength = len( oracle( bytes() ) )
-    prefix = ''
-    ctlength1 = ctlength
-    while(  ctlength1 == ctlength ):
-        prefix += 'A'
-        ctlength1 = len( oracle( bytes(prefix,'utf-8') ) )
-
-    # find second ciphertext blocksize increase
-    ctlength2 = ctlength1
-    while( ctlength1 == ctlength2 ):
-        prefix += 'B'
-        ctlength2 = len( oracle( bytes(prefix,'utf-8') ) )
-
-    return ( ctlength2 - ctlength1 )
-
-def detect_pad_length() -> Tuple[int,int,int]:
-    ctlength = len( oracle( bytes() ) )
-    prefix = ''
-    ctlength1 = ctlength
-    while(  ctlength1 == ctlength ):
-        prefix += 'A'
-        ctlength1 = len( oracle( bytes(prefix,'utf-8') ) )
-
-    pad_length = len(prefix) - 1
-    return ( ctlength, pad_length, ctlength-pad_length )
 
 def create_ecb_codebook( prefix:bytes, blocksize:int=16 ) -> Dict[str,str]:
     assert len(prefix) == (blocksize-1), "Creating codebook with incorrect prefix length, must be blocksize-1, got: " + str(len(prefix)) 
@@ -118,38 +90,25 @@ if __name__ == '__main__':
     print('Set 2, Challenge 12 - Byte-at-a-time ECB decryption (Simple)')
     print('------------------------------------------')
 
-    # Determine Blocksize - observe changes in ciphertext length to determine blocksize
-    blocksize = detect_blocksize()
-    print('Detected Blocksize: ' + str(blocksize))
-    # if len(secretdata) % blocksize == 0:
-    #     print('Secret data is blocksize aligned.')
-    # else:
-    #     print('Secret data is NOT blocksize aligned.')
-    #secretdata = pkcs7_pad( secretdata )
+    # Calculate Message Metrics
+    (blocksize, block_count, ctlength, pad_length, pt_length) = detect_blockcipher_metrics( oracle )
+    print('Blocksize:\t\t' + str(blocksize))
+    print('Block Count:\t\t' + str(block_count))
+    print('Ciphertext Length:\t' + str(ctlength))
+    print('Padding:\t\t' + str(pad_length))
+    print('Plaintext Length:\t' + str(pt_length))
 
     # Detect ECB - we know the blocksize, we can force a block repeat with the prefix
     prefix = bytes( 'A' * (blocksize*3) ,'utf-8')
     using_ecb = detect_ecb( oracle( prefix ) )
     print('ECB Detected: ' + str(using_ecb))
 
-    # Calculate block count with full pad.
-    prefix = bytes('A' * blocksize, 'utf-8')
-    ct = oracle( prefix )
-    blockcount = int(len(ct) / blocksize)
-    print('Blockcount: ' + str(blockcount))
-
-    # Calculate Message Lengths
-    (ctlength, padlength, msglength) = detect_pad_length()
-    print('Ciphertext Length:\t' + str(ctlength))
-    print('Padding:\t\t' + str(padlength))
-    print('Message Length:\t\t' + str(msglength))
-
     # Decrypt with Attack
     recovered_data = bytearray()
     for blocknum in range( 9 ):
         print('\nStarting Block: ' + str(blocknum) )
         print('----------------------------------------------')
-        result = recover_block( blocknum, bytes(recovered_data), msglength )
+        result = recover_block( blocknum, bytes(recovered_data), pt_length )
         recovered_data.extend( result )
         print('Block ' + str(blocknum) + ' Complete: ' + result.hex() + '\n' )
 

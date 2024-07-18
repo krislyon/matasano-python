@@ -1,5 +1,7 @@
 from Crypto.Cipher import AES
 from xor_utils import buffer_xor
+from typing import Dict,Callable,Tuple
+
 
 def pkcs7_pad( plaintext:bytes, blocksize:int=16 ) -> bytes:
     data = bytearray(plaintext)
@@ -16,24 +18,62 @@ def pkcs7_unpad( plaintext:bytes, blocksize:int=16 ) -> bytes:
     data = data[0:data_length-pad_byte]
     return bytes(data)
 
-
 def split_blocks( input:bytes, blocksize:int=16 ) -> list[bytes]:
     input_length = len(input)
     assert (input_length % blocksize == 0), "Input isnt blocksize aligned, dont forget to pad input."
     blocks = [input[(i)*blocksize:(i+1)*16] for i in range(0, int(input_length/blocksize)) ]
     return blocks
 
-
 def detect_ecb( ciphertext:bytes, blocksize:int=16 ) -> bool:
+    (result,idx) = detect_duplicate_blocks(ciphertext,blocksize)
+    return result
+
+def detect_blocksize( oracle_fn:Callable ):
+    # find first ciphertext blocksize increase (full padding)
+    ctlength = len( oracle_fn( bytes() ) )
+    prefix = ''
+    ctlength1 = ctlength
+    while(  ctlength1 == ctlength ):
+        prefix += 'A'
+        ctlength1 = len( oracle_fn( bytes(prefix,'utf-8') ) )
+
+    # find second ciphertext blocksize increase
+    ctlength2 = ctlength1
+    while( ctlength1 == ctlength2 ):
+        prefix += 'B'
+        ctlength2 = len( oracle_fn( bytes(prefix,'utf-8') ) )
+
+    return ( ctlength2 - ctlength1 )
+
+def detect_blockcipher_metrics( oracle_fn:Callable ) -> Tuple[int,int,int,int,int]:
+    ctlength = len( oracle_fn( bytes() ) )
+    prefix = ''
+    ctlength1 = ctlength
+    while(  ctlength1 == ctlength ):
+        prefix += 'A'
+        ctlength1 = len( oracle_fn( bytes(prefix,'utf-8') ) )
+        
+    pad_length = len(prefix)
+    pt_length = ctlength-pad_length
+    blocksize = detect_blocksize(oracle_fn)
+    block_count = int(ctlength / blocksize)
+    return ( blocksize, block_count, ctlength, pad_length, pt_length )
+
+def detect_duplicate_blocks(ciphertext: bytes, blocksize:int=16 ) -> Tuple[bool,int]:
+    dupBlock = ""
     bdict = {}
     blocks = split_blocks(ciphertext)
-    for block in blocks:
+    for idx,block in enumerate(blocks):
         if block.hex() in bdict:
-            return True
+            dupBlock = block.hex()
+            break
         else:
-            bdict[block.hex()] = 1
-    return False
-
+            bdict[block.hex()] = idx
+    
+    if dupBlock != "":
+        return (True, bdict[dupBlock] )
+    else:
+        return (False,-1)
 
 def decrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
     assert len(key) == 16, "Key must be 16 bytes long for AES-128"
@@ -61,7 +101,6 @@ def encrypt_aes_manual_cbc(plaintext: bytes, key: bytes, iv: bytes) -> bytes:
 
     return bytes(encrypted)
 
-
 def decrypt_aes_manual_cbc(ciphertext: bytes, key: bytes, iv: bytes) -> bytes:
     assert len(key) == 16, "Key must be 16 bytes long for AES-128"
     assert len(iv) == 16, "IV must be 16 bytes long for AES-128"
@@ -76,3 +115,5 @@ def decrypt_aes_manual_cbc(ciphertext: bytes, key: bytes, iv: bytes) -> bytes:
         lastblock = block
         
     return bytes(decrypted)
+
+    
