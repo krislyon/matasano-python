@@ -4,7 +4,7 @@
 import sys
 import base64
 import random
-from typing import Dict
+from typing import Dict, Tuple
 sys.path.append('../utils')
 from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb
 from text_utils import hexdump
@@ -42,6 +42,17 @@ def detect_blocksize():
 
     return ( ctlength2 - ctlength1 )
 
+def detect_pad_length() -> Tuple[int,int,int]:
+    ctlength = len( oracle( bytes() ) )
+    prefix = ''
+    ctlength1 = ctlength
+    while(  ctlength1 == ctlength ):
+        prefix += 'A'
+        ctlength1 = len( oracle( bytes(prefix,'utf-8') ) )
+
+    pad_length = len(prefix) - 1
+    return ( ctlength, pad_length, ctlength-pad_length )
+
 def create_ecb_codebook( prefix:bytes, blocksize:int=16 ) -> Dict[str,str]:
     assert len(prefix) == (blocksize-1), "Creating codebook with incorrect prefix length, must be blocksize-1, got: " + str(len(prefix)) 
     ecb_codebook = {}
@@ -55,10 +66,15 @@ def create_ecb_codebook( prefix:bytes, blocksize:int=16 ) -> Dict[str,str]:
         ecb_codebook[block.hex()] = bytes(pt).hex()
     return ecb_codebook
 
-def recover_block( blocknum, recovered_data ):
+def recover_block( blocknum:int, recovered_data:bytes, recovery_target:int=0 ):
     recovered_block = bytearray()
 
     for byte_num in range(1,blocksize+1):
+
+        if recovery_target != 0:
+            if len(recovered_data) + len(recovered_block) == recovery_target:
+                print('Recovery Target Reached, breaking and padding.')
+                break
 
         # prefix our knowndata
         if blocknum == 0:
@@ -90,8 +106,11 @@ def recover_block( blocknum, recovered_data ):
         # store the recovered byte
         recovered_block.append(pt[15]) 
 
+    if recovery_target != 0 and len(recovered_block) != blocksize:
+        pad = blocksize - len(recovered_block)
+        for i in range(pad):
+            recovered_block.append(pad)
 
-    assert len(recovered_block) == 16, "Off by one."
     return bytes(recovered_block)
 
 if __name__ == '__main__':
@@ -119,12 +138,20 @@ if __name__ == '__main__':
     blockcount = int(len(ct) / blocksize)
     print('Blockcount: ' + str(blockcount))
 
+    # Calculate Message Lengths
+    (ctlength, padlength, msglength) = detect_pad_length()
+    print('Ciphertext Length:\t' + str(ctlength))
+    print('Padding:\t\t' + str(padlength))
+    print('Message Length:\t\t' + str(msglength))
+
     # Decrypt with Attack
     recovered_data = bytearray()
-    for blocknum in range( 10 ):
-        result = recover_block( blocknum, bytes(recovered_data))
+    for blocknum in range( 9 ):
+        print('\nStarting Block: ' + str(blocknum) )
+        print('----------------------------------------------')
+        result = recover_block( blocknum, bytes(recovered_data), msglength )
         recovered_data.extend( result )
-        print('Block ' + str(blocknum) + ' Complete: ' + result.hex() )
+        print('Block ' + str(blocknum) + ' Complete: ' + result.hex() + '\n' )
 
     print( recovered_data.decode('utf-8'))
 
