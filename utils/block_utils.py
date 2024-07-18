@@ -11,10 +11,16 @@ def pkcs7_pad( plaintext:bytes, blocksize:int=16 ) -> bytes:
         data.append(pad_byte)
     return bytes(data)
 
-def pkcs7_unpad( plaintext:bytes, blocksize:int=16 ) -> bytes:
+def pkcs7_unpad( plaintext:bytes, validate:bool=False, blocksize:int=16 ) -> bytes:
     data = bytearray(plaintext)
     data_length = len(data)
     pad_byte = data[data_length-1]
+
+    if validate:
+        for i in range(pad_byte):
+            if data[(data_length-1)-i] != pad_byte:
+                raise Exception("Plaintext was incorrectly pkcs7 padded.")
+
     data = data[0:data_length-pad_byte]
     return bytes(data)
 
