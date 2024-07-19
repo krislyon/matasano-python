@@ -90,10 +90,10 @@ def decrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
     decrypted = cipher.decrypt(ciphertext)    
     return decrypted
 
-def encrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
+def encrypt_aes_ecb(plaintext: bytes, key: bytes) -> bytes:
     assert len(key) == 16, "Key must be 16 bytes long for AES-128"
     cipher = AES.new(key, AES.MODE_ECB)
-    encrypted = cipher.encrypt(ciphertext)
+    encrypted = cipher.encrypt(plaintext)
     return encrypted
 
 def encrypt_aes_manual_cbc(plaintext: bytes, key: bytes, iv: bytes) -> bytes:
