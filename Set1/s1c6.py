@@ -28,7 +28,7 @@ if __name__ == '__main__':
 
     # Transpose the blocks and find the key for each block.
     transposed_blocks = transpose_data_blocks( ciphertext, keySize )
-    recovered_key = recovery_xor_key( transposed_blocks )        
+    recovered_key = recover_xor_key( transposed_blocks )        
     print('Recovered Key: ' + str(recovered_key))
 
     # Decrypt cipher text with recovered key

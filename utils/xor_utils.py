@@ -81,7 +81,7 @@ def calculate_xor_keysize( ciphertext:bytes, max_key_size:int=MAX_KEY_SIZE, debu
 
     return minsize, ksize_results
 
-def recovery_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> bytes:
+def recover_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> bytes:
     recovered_key = bytearray()
     for idx,block in enumerate(transposed_data_blocks):
         max_score = 0

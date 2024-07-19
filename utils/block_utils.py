@@ -30,7 +30,7 @@ def pkcs7_unpad( plaintext:bytes, validate:bool=False, blocksize:int=16 ) -> byt
 def split_blocks( input:bytes, blocksize:int=16 ) -> list[bytes]:
     input_length = len(input)
     assert (input_length % blocksize == 0), "Input isnt blocksize aligned, dont forget to pad input."
-    blocks = [input[(i)*blocksize:(i+1)*16] for i in range(0, int(input_length/blocksize)) ]
+    blocks = [input[(i)*blocksize:(i+1)*blocksize] for i in range(0, int(input_length/blocksize)) ]
     return blocks
 
 def detect_ecb( ciphertext:bytes, blocksize:int=16 ) -> bool:

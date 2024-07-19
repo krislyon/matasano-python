@@ -52,6 +52,8 @@ def in_ascii_alpha_range(c:int) -> bool:
         return False
 
 def ascii_range_score( buf: bytes ) -> float:
+    if len(buf) == 0:
+        return 0
     score = 0
     for byte in buf:
         if in_ascii_alpha_range( byte ):
