@@ -49,10 +49,10 @@ def MT19937Generator(seed):
         
         if( idx >= 4 ):
             bytestream = bytearray( rng.rand32().to_bytes(4) )
+            idx = 0
 
         yield bytestream[idx]
-        idx += 1
-             
+        idx += 1           
 
 def untemper1(y):
     yt3 = (y & 0xFFE00000)
