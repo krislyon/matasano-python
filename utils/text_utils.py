@@ -119,3 +119,7 @@ def print_data( name: str, data: bytes, count:int=-1, cols:int=80 ):
     print( name + ':')
     print( '-' * cols )  
     print( *hexdump( data, 32, 8, '.'), sep="\n")
+
+def hex_space( data:bytes ):
+    hex_string = data.hex()
+    return ' '.join(hex_string[i:i+8] for i in range(0, len(hex_string), 8))

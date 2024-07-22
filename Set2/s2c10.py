@@ -36,4 +36,7 @@ if __name__ == '__main__':
     print('\nResult:')
     result = pkcs7_unpad( padded_plaintext )
     print( result.decode("utf-8") )
+
+
+    print( base64.b64encode( result ) )
    
