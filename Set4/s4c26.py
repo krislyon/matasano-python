@@ -32,19 +32,25 @@ def is_admin( token:bytes ):
        
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 16 - CBC BitFlipping Attacks')
+    print('Set 4, Challenge 26 - CTR BitFlipping Attacks')
     print('------------------------------------------')
 
+    # determine userdata_idx in ciphertext
+    userdata_idx = 0
+    ct_a = create_token( "A" )
+    ct_b = create_token( "B" )
+    while ct_a[userdata_idx] == ct_b[userdata_idx]:
+        userdata_idx += 1
+    print("userdata_idx: " + str(userdata_idx))
 
-    userdata_idx = 32
     attack_input_1 = "FFFFFFFFFFFFFFF"
     attack_input_2 = bytes("ABCD;admin=true",'utf-8')
     token = create_token( attack_input_1 )
 
-    keystream = buffer_xor(token[32:47], bytes(attack_input_1,'utf-8') )
+    keystream = buffer_xor(token[userdata_idx:userdata_idx + len(attack_input_1)], bytes(attack_input_1,'utf-8') )
     patch = buffer_xor( keystream, attack_input_2  )
 
     modified_token = bytearray(token)
-    modified_token[32:47] = patch
+    modified_token[userdata_idx:userdata_idx + len(attack_input_1)] = patch
 
     print("Admin: " + str(is_admin( bytes(modified_token) )))
