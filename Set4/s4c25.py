@@ -36,7 +36,7 @@ if __name__ == '__main__':
     pt = load_base64_data('s4c25.dat')
     ct = encrypt_aes_ctr(pt,aeskey,nonce)
 
-    ### Recovery the keysteam
+    ### Recover the keysteam
     recovery_pt = bytes([0xff for i in range(len(ct))])
     new_ct = edit_aes_ctr( ct, aeskey, 0, recovery_pt, nonce )
     recovered_keystream = buffer_xor( new_ct, recovery_pt )
