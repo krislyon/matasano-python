@@ -109,50 +109,49 @@ def recover_block( junk_offset:int, junk_blocks:int, blocknum:int, recovered_dat
 
     return bytes(recovered_block)
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 14 - Byte-at-a-time ECB decryption (Harder)')
-    print('------------------------------------------')
+print('Matasano Crypto Challenges')
+print('Set 2, Challenge 14 - Byte-at-a-time ECB decryption (Harder)')
+print('------------------------------------------')
 
-    key = random.randbytes(16)
-    secretdata = load_base64_data('s2c12.dat')
+key = random.randbytes(16)
+secretdata = load_base64_data('s2c12.dat')
 
-    # Calculate Message Metrics
-    (blocksize, block_count, ctlength, pad_length, pt_length) = detect_blockcipher_metrics( oracle )
-    print('Blocksize:\t\t' + str(blocksize))
-    print('Block Count:\t\t' + str(block_count))
-    print('Ciphertext Length:\t' + str(ctlength))
-    print('Padding:\t\t' + str(pad_length))
-    print('Plaintext Length:\t' + str(pt_length))
+# Calculate Message Metrics
+(blocksize, block_count, ctlength, pad_length, pt_length) = detect_blockcipher_metrics( oracle )
+print('Blocksize:\t\t' + str(blocksize))
+print('Block Count:\t\t' + str(block_count))
+print('Ciphertext Length:\t' + str(ctlength))
+print('Padding:\t\t' + str(pad_length))
+print('Plaintext Length:\t' + str(pt_length))
 
-    # Detect ECB - we know the blocksize, we can force a block repeat with the prefix
-    prefix = bytes( 'A' * (blocksize*3) ,'utf-8')
-    using_ecb = detect_ecb( oracle( prefix ) )
-    print('ECB Detected:\t\t' + str(using_ecb))
-    print('')
-    # Detect Random Byte Length
-    rand_byte_length = detect_length_random_bytes()
-    print('Random Byte Count Detected:\t' + str(rand_byte_length) )
+# Detect ECB - we know the blocksize, we can force a block repeat with the prefix
+prefix = bytes( 'A' * (blocksize*3) ,'utf-8')
+using_ecb = detect_ecb( oracle( prefix ) )
+print('ECB Detected:\t\t' + str(using_ecb))
+print('')
+# Detect Random Byte Length
+rand_byte_length = detect_length_random_bytes()
+print('Random Byte Count Detected:\t' + str(rand_byte_length) )
 
-    recv_length = pt_length - rand_byte_length
-    print('Target Recovery Length:\t\t' + str(recv_length))
+recv_length = pt_length - rand_byte_length
+print('Target Recovery Length:\t\t' + str(recv_length))
 
 
-    # Determine how many junk bytes we need to add to complete the first random blocks.
-    junk_count = 0
-    while (rand_byte_length + junk_count) % blocksize != 0:
-        junk_count += 1
-    print('Junk Byte Count:\t\t' + str(junk_count) )
-    junk_blocks = int( (rand_byte_length + junk_count) / blocksize )
-    print('Junk Blocks (skip):\t\t' + str(junk_blocks) )
+# Determine how many junk bytes we need to add to complete the first random blocks.
+junk_count = 0
+while (rand_byte_length + junk_count) % blocksize != 0:
+    junk_count += 1
+print('Junk Byte Count:\t\t' + str(junk_count) )
+junk_blocks = int( (rand_byte_length + junk_count) / blocksize )
+print('Junk Blocks (skip):\t\t' + str(junk_blocks) )
 
-    # Decrypt with Attack
-    recovered_data = bytearray()  
-    for blocknum in range( junk_blocks, block_count ):
-        result = recover_block( junk_count, junk_blocks, blocknum, bytes(recovered_data), recv_length )
-        recovered_data.extend( result )
-        print('Block ' + str(blocknum) + ' Complete: \t' + result.hex() )
+# Decrypt with Attack
+recovered_data = bytearray()  
+for blocknum in range( junk_blocks, block_count ):
+    result = recover_block( junk_count, junk_blocks, blocknum, bytes(recovered_data), recv_length )
+    recovered_data.extend( result )
+    print('Block ' + str(blocknum) + ' Complete: \t' + result.hex() )
 
-    print()
-    print( recovered_data.decode('utf-8'))
+print()
+print( recovered_data.decode('utf-8'))
 

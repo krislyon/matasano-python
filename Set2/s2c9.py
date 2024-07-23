@@ -14,26 +14,26 @@ def pkcs7_pad( plaintext:bytes, blocksize:int=16 ) -> bytes:
     return bytes(data)
 
 
-if __name__ == '__main__':
-    print( pkcs7_pad( bytes("YELLOW SUBMARINE","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaa","utf-8") ).hex() )
 
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINE","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaa","utf-8") ).hex() )
 
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaa","utf-8") ).hex() )
 
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaa","utf-8") ).hex() )
 
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaa","utf-8") ).hex() )
-    print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaa","utf-8") ).hex() )
+
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaa","utf-8") ).hex() )
+print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaaa","utf-8") ).hex() )

@@ -17,46 +17,46 @@ def load_base64_data( filename: str ) -> bytes:
 
 aeskey = random.randbytes(16)
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 3, Challenge 20 - Break fixed-nonce CTR statistically')
-    print('---------------------------------------------------------')
 
-    plaintexts = load_base64_data("s3c19.dat")
-    ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
+print('Matasano Crypto Challenges')
+print('Set 3, Challenge 20 - Break fixed-nonce CTR statistically')
+print('---------------------------------------------------------')
 
-    ## Determine the min-length ciphertext
-    min_ct_len = 1000
-    for ct in ciphertexts:
-        if len(ct) < min_ct_len:
-            min_ct_len = len(ct)
-    print('min_ct_len: ' + str(min_ct_len))
+plaintexts = load_base64_data("s3c19.dat")
+ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
 
-
-    # Trim ciphertexts to min_ct_len, and append them together.
-    ciphertext = bytearray()
-    for ct in ciphertexts:
-        ciphertext.extend(ct[0:min_ct_len])
-
-    blocks = transpose_data_blocks( ciphertext, min_ct_len )
-    recovered_key_stream = recover_xor_key( blocks )
-
-    ## Compare against actual.
-    key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
-    actual_key_stream = list(itertools.islice(key_stream_gen, min_ct_len))
-
-    sum = 0  
-    for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
-        sum += v
+## Determine the min-length ciphertext
+min_ct_len = 1000
+for ct in ciphertexts:
+    if len(ct) < min_ct_len:
+        min_ct_len = len(ct)
+print('min_ct_len: ' + str(min_ct_len))
 
 
+# Trim ciphertexts to min_ct_len, and append them together.
+ciphertext = bytearray()
+for ct in ciphertexts:
+    ciphertext.extend(ct[0:min_ct_len])
 
-    print( "Recovered:\t" + recovered_key_stream.hex() )
-    print( "Actual:\t\t" + bytes(bytearray(actual_key_stream )).hex() )
-    print( "Match Rate:\t" + str(sum/(min_ct_len)))
+blocks = transpose_data_blocks( ciphertext, min_ct_len )
+recovered_key_stream = recover_xor_key( blocks )
+
+## Compare against actual.
+key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
+actual_key_stream = list(itertools.islice(key_stream_gen, min_ct_len))
+
+sum = 0  
+for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
+    sum += v
 
 
-    
+
+print( "Recovered:\t" + recovered_key_stream.hex() )
+print( "Actual:\t\t" + bytes(bytearray(actual_key_stream )).hex() )
+print( "Match Rate:\t" + str(sum/(min_ct_len)))
+
+
+
 
 
 

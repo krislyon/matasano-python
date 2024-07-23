@@ -32,33 +32,32 @@ def receiver_decrypt_data( token:bytes ):
     return pt
 
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 4, Challenge 27 - Recover the key from CBC with IV = Key')
-    print('------------------------------------------------------------')
+print('Matasano Crypto Challenges')
+print('Set 4, Challenge 27 - Recover the key from CBC with IV = Key')
+print('------------------------------------------------------------')
 
-    msg = "How much wood can a woodchuck chuck!"
+msg = "How much wood can a woodchuck chuck!"
 
-    ct = sender_encrypt_data(msg)
-    blockcount = len(ct)/16 
-    print('Blockcount: ' + str(blockcount))
+ct = sender_encrypt_data(msg)
+blockcount = len(ct)/16 
+print('Blockcount: ' + str(blockcount))
 
-    zero_block = bytes.fromhex('00000000000000000000000000000000')
-    modified_ct = bytearray()
-    modified_ct.extend( ct[0:16] )
-    modified_ct.extend( zero_block )
-    modified_ct.extend( ct[0:16] )
+zero_block = bytes.fromhex('00000000000000000000000000000000')
+modified_ct = bytearray()
+modified_ct.extend( ct[0:16] )
+modified_ct.extend( zero_block )
+modified_ct.extend( ct[0:16] )
 
-    print( modified_ct.hex() )
-    mod_pt = receiver_decrypt_data( modified_ct )
-    print("Received Message: " + str(mod_pt) )
+print( modified_ct.hex() )
+mod_pt = receiver_decrypt_data( modified_ct )
+print("Received Message: " + str(mod_pt) )
 
-    recovered_key = buffer_xor( mod_pt[0:16], mod_pt[32:48])  
+recovered_key = buffer_xor( mod_pt[0:16], mod_pt[32:48])  
 
-    print('Key:\t\t' + aeskey.hex() )
-    print('Recovered Key\t' + recovered_key.hex() ) 
+print('Key:\t\t' + aeskey.hex() )
+print('Recovered Key\t' + recovered_key.hex() ) 
 
-    print('Recovered Msg: ' + decrypt_aes_manual_cbc( ct, recovered_key, recovered_key ).decode('utf-8') )
+print('Recovered Msg: ' + decrypt_aes_manual_cbc( ct, recovered_key, recovered_key ).decode('utf-8') )
 
 
 

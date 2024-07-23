@@ -39,26 +39,25 @@ def oracle( email:str ):
     ct = encrypt_aes_ecb( pkcs7_pad(bytes(profile_string,'utf-8')), aeskey )
     return ct
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 13 - ECB Cut and Paste')
-    print('------------------------------------------')
+print('Matasano Crypto Challenges')
+print('Set 2, Challenge 13 - ECB Cut and Paste')
+print('------------------------------------------')
 
-    # Arts and Crafts time: Cut and paste the blocks...
-    # Part1: email=xxxxxxxxxx xxx&uid=10&role= user                  // keep block 1 & 2
-    p1ciphertext = oracle('hakr@home.com')
-    block1 = p1ciphertext[0:16]
-    block2 = p1ciphertext[16:32]
+# Arts and Crafts time: Cut and paste the blocks...
+# Part1: email=xxxxxxxxxx xxx&uid=10&role= user                  // keep block 1 & 2
+p1ciphertext = oracle('hakr@home.com')
+block1 = p1ciphertext[0:16]
+block2 = p1ciphertext[16:32]
 
-    # Part2: email=xxxxxxxxxx adminPPPPPPPPPPP &uid=10&role=use r    // keep block 2.
-    p2ciphertext = oracle( 'aaaaaaaaaaadmin\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b' );
-    block3 = p2ciphertext[16:32]
+# Part2: email=xxxxxxxxxx adminPPPPPPPPPPP &uid=10&role=use r    // keep block 2.
+p2ciphertext = oracle( 'aaaaaaaaaaadmin\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b' );
+block3 = p2ciphertext[16:32]
 
-    crafted_ciphertext = bytearray()
-    crafted_ciphertext.extend( block1 )
-    crafted_ciphertext.extend( block2 )
-    crafted_ciphertext.extend( block3 )
+crafted_ciphertext = bytearray()
+crafted_ciphertext.extend( block1 )
+crafted_ciphertext.extend( block2 )
+crafted_ciphertext.extend( block3 )
 
-    ######
-    pt = pkcs7_unpad( decrypt_aes_ecb( crafted_ciphertext, aeskey ))
-    print( kv_string_parse(pt.decode('utf-8')) )
+######
+pt = pkcs7_unpad( decrypt_aes_ecb( crafted_ciphertext, aeskey ))
+print( kv_string_parse(pt.decode('utf-8')) )

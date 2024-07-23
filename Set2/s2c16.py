@@ -28,19 +28,19 @@ def is_admin( token:bytes ):
     else:
         return False
        
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 16 - CBC BitFlipping Attacks')
-    print('------------------------------------------')
+
+print('Matasano Crypto Challenges')
+print('Set 2, Challenge 16 - CBC BitFlipping Attacks')
+print('------------------------------------------')
 
 
-    attack_input = "XXXXXXXXXXXXXXXXXXXXX\x3aadmin\x3ctrue"
-    token = create_token( attack_input )
-        
-    modified_token = bytearray(token)
-    modified_token[37] = modified_token[37] ^ 0x3a      
-    modified_token[37] = modified_token[37] ^ 0x3b      
-    modified_token[43] = modified_token[43] ^ 0x3c      
-    modified_token[43] = modified_token[43] ^ 0x3d      
+attack_input = "XXXXXXXXXXXXXXXXXXXXX\x3aadmin\x3ctrue"
+token = create_token( attack_input )
     
-    print("Admin: " + str(is_admin( bytes(modified_token) )))
+modified_token = bytearray(token)
+modified_token[37] = modified_token[37] ^ 0x3a      
+modified_token[37] = modified_token[37] ^ 0x3b      
+modified_token[43] = modified_token[43] ^ 0x3c      
+modified_token[43] = modified_token[43] ^ 0x3d      
+
+print("Admin: " + str(is_admin( bytes(modified_token) )))

@@ -82,35 +82,35 @@ def perform_digraph_enhancement( sb_result, texts, max_length ):
     return [result[k] for k in sorted( result.keys() )]
 
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 3, Challenge 19 - Break fixed-nonce CTR mode using substitutions')
-    print('--------------------------------------------------------------------')
 
-    plaintexts = load_base64_data("s3c19.dat")
-    ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
+print('Matasano Crypto Challenges')
+print('Set 3, Challenge 19 - Break fixed-nonce CTR mode using substitutions')
+print('--------------------------------------------------------------------')
 
-    ## Determine the max-length ciphertext
-    max_ct_len = 0
-    for ct in ciphertexts:
-        if len(ct) > max_ct_len:
-            max_ct_len = len(ct)
-    print('max_ct_len: ' + str(max_ct_len))
+plaintexts = load_base64_data("s3c19.dat")
+ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
 
-    ## Recover the keystream via stat analysis
-    sb_result = single_byte_recovery( ciphertexts, 5, max_ct_len )
-    recovered_key_stream = perform_digraph_enhancement( sb_result, ciphertexts, max_ct_len )
+## Determine the max-length ciphertext
+max_ct_len = 0
+for ct in ciphertexts:
+    if len(ct) > max_ct_len:
+        max_ct_len = len(ct)
+print('max_ct_len: ' + str(max_ct_len))
 
-    ## Compare against actual.
-    key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
-    actual_key_stream = list(itertools.islice(key_stream_gen,38))
+## Recover the keystream via stat analysis
+sb_result = single_byte_recovery( ciphertexts, 5, max_ct_len )
+recovered_key_stream = perform_digraph_enhancement( sb_result, ciphertexts, max_ct_len )
 
-    sum = 0  
-    for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
-        sum += v
+## Compare against actual.
+key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
+actual_key_stream = list(itertools.islice(key_stream_gen,38))
 
-    print( "Recovered:\t" + str(recovered_key_stream) )
-    print( "Actual:\t\t" + str(actual_key_stream ) )
-    print( "Match Rate:\t" + str(sum/(max_ct_len-1)))
+sum = 0  
+for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
+    sum += v
+
+print( "Recovered:\t" + str(recovered_key_stream) )
+print( "Actual:\t\t" + str(actual_key_stream ) )
+print( "Match Rate:\t" + str(sum/(max_ct_len-1)))
 
 

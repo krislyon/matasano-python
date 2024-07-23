@@ -85,32 +85,31 @@ def recover_block( blocknum:int, recovered_data:bytes, recovery_target:int=0 ):
 
     return bytes(recovered_block)
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 12 - Byte-at-a-time ECB decryption (Simple)')
-    print('------------------------------------------')
+print('Matasano Crypto Challenges')
+print('Set 2, Challenge 12 - Byte-at-a-time ECB decryption (Simple)')
+print('------------------------------------------')
 
-    # Calculate Message Metrics
-    (blocksize, block_count, ctlength, pad_length, pt_length) = detect_blockcipher_metrics( oracle )
-    print('Blocksize:\t\t' + str(blocksize))
-    print('Block Count:\t\t' + str(block_count))
-    print('Ciphertext Length:\t' + str(ctlength))
-    print('Padding:\t\t' + str(pad_length))
-    print('Plaintext Length:\t' + str(pt_length))
+# Calculate Message Metrics
+(blocksize, block_count, ctlength, pad_length, pt_length) = detect_blockcipher_metrics( oracle )
+print('Blocksize:\t\t' + str(blocksize))
+print('Block Count:\t\t' + str(block_count))
+print('Ciphertext Length:\t' + str(ctlength))
+print('Padding:\t\t' + str(pad_length))
+print('Plaintext Length:\t' + str(pt_length))
 
-    # Detect ECB - we know the blocksize, we can force a block repeat with the prefix
-    prefix = bytes( 'A' * (blocksize*3) ,'utf-8')
-    using_ecb = detect_ecb( oracle( prefix ) )
-    print('ECB Detected: ' + str(using_ecb))
+# Detect ECB - we know the blocksize, we can force a block repeat with the prefix
+prefix = bytes( 'A' * (blocksize*3) ,'utf-8')
+using_ecb = detect_ecb( oracle( prefix ) )
+print('ECB Detected: ' + str(using_ecb))
 
-    # Decrypt with Attack
-    recovered_data = bytearray()
-    for blocknum in range( 9 ):
-        print('\nStarting Block: ' + str(blocknum) )
-        print('----------------------------------------------')
-        result = recover_block( blocknum, bytes(recovered_data), pt_length )
-        recovered_data.extend( result )
-        print('Block ' + str(blocknum) + ' Complete: ' + result.hex() + '\n' )
+# Decrypt with Attack
+recovered_data = bytearray()
+for blocknum in range( 9 ):
+    print('\nStarting Block: ' + str(blocknum) )
+    print('----------------------------------------------')
+    result = recover_block( blocknum, bytes(recovered_data), pt_length )
+    recovered_data.extend( result )
+    print('Block ' + str(blocknum) + ' Complete: ' + result.hex() + '\n' )
 
-    print( recovered_data.decode('utf-8'))
+print( recovered_data.decode('utf-8'))
 

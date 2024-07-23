@@ -31,87 +31,87 @@ def padding_oracle( ciphertext, attack_iv ):
         return False
 
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 3, Challenge 17 - The CBC Padding Oracle')
-    print('--------------------------------------------')
 
-    for text in range(0,len(plaintexts)):
-        ct = get_ciphertext(text)
+print('Matasano Crypto Challenges')
+print('Set 3, Challenge 17 - The CBC Padding Oracle')
+print('--------------------------------------------')
+
+for text in range(0,len(plaintexts)):
+    ct = get_ciphertext(text)
+    
+    ctlength = len(ct)
+    blocksize = 16
+    blockcount = int(ctlength/blocksize)
+
+    # print("Ciphertext Length:\t" + str(ctlength))
+    # print("Blocksize:\t\t" + str(blocksize))
+    # print("Blockcount:\t\t" + str(blockcount))
+    
+    recovered_blocks = []
+    # Attack each block independently, starting at the end of the ciphertext
+    for attack_block_idx in range(blockcount-1,-1,-1):
+        recovered_block = bytearray()
+        corrupt_block_idx = attack_block_idx-1
+        internal_aes_state = bytearray(bytes.fromhex("00000000000000000000000000000000")) 
+
+        # attack last block of ciphertext byte by byte, corrupt previous block byte by byte
+        for expected_pad in range(1,blocksize+1):
+            modified_iv = bytearray(iv)
+            modified_ct = bytearray(ct[0:(attack_block_idx+1)*blocksize])
         
-        ctlength = len(ct)
-        blocksize = 16
-        blockcount = int(ctlength/blocksize)
+            byte_idx_in_block = (blocksize-expected_pad)
 
-        # print("Ciphertext Length:\t" + str(ctlength))
-        # print("Blocksize:\t\t" + str(blocksize))
-        # print("Blockcount:\t\t" + str(blockcount))
-        
-        recovered_blocks = []
-        # Attack each block independently, starting at the end of the ciphertext
-        for attack_block_idx in range(blockcount-1,-1,-1):
-            recovered_block = bytearray()
-            corrupt_block_idx = attack_block_idx-1
-            internal_aes_state = bytearray(bytes.fromhex("00000000000000000000000000000000")) 
+            # print("\nProcessing Next Byte:")
+            # print("attack_block_idx:" + str(attack_block_idx) + ",\tcorrupt_block_idx:" + str(corrupt_block_idx) + ",\tbyte_idx_in_block: " + str(byte_idx_in_block) + ",\texpected pad: " + expected_pad.to_bytes().hex() )
+            # print("--------------------------------------------------------------------------------------------------")
 
-            # attack last block of ciphertext byte by byte, corrupt previous block byte by byte
-            for expected_pad in range(1,blocksize+1):
-                modified_iv = bytearray(iv)
-                modified_ct = bytearray(ct[0:(attack_block_idx+1)*blocksize])
-            
-                byte_idx_in_block = (blocksize-expected_pad)
+            # store the original ciphertext byte
+            if corrupt_block_idx >= 0:
+                orig_ct_byte = ct[(blocksize*corrupt_block_idx)+byte_idx_in_block]
+            else:
+                orig_ct_byte = iv[byte_idx_in_block]
 
-                # print("\nProcessing Next Byte:")
-                # print("attack_block_idx:" + str(attack_block_idx) + ",\tcorrupt_block_idx:" + str(corrupt_block_idx) + ",\tbyte_idx_in_block: " + str(byte_idx_in_block) + ",\texpected pad: " + expected_pad.to_bytes().hex() )
-                # print("--------------------------------------------------------------------------------------------------")
+            # bruteforce our target byte ()
+            for byte_guess in range(257):
 
-                # store the original ciphertext byte
+                if byte_guess == 256:
+                    print('\nNo Valid Pad Found')
+                    break
+
                 if corrupt_block_idx >= 0:
-                    orig_ct_byte = ct[(blocksize*corrupt_block_idx)+byte_idx_in_block]
+                    for i in range(blocksize):
+                        modified_ct[(corrupt_block_idx*blocksize)+i] = internal_aes_state[i] ^ expected_pad
+                    modified_ct[(corrupt_block_idx*blocksize)+byte_idx_in_block] = byte_guess
                 else:
-                    orig_ct_byte = iv[byte_idx_in_block]
+                    for i in range(blocksize):
+                        modified_iv[i] = internal_aes_state[i] ^ expected_pad
+                    modified_iv[byte_idx_in_block] = byte_guess
 
-                # bruteforce our target byte ()
-                for byte_guess in range(257):
+                if padding_oracle( modified_ct, modified_iv ):
+                    #print('\nValid Pad Detected: ' + byte_guess.to_bytes().hex() )
+                    #print('Modified CT: ' + bytes(modified_ct).hex() )
+                    #print('IV: ' + bytes(modified_iv).hex() )
+                    pt_byte = byte_guess ^ orig_ct_byte ^ expected_pad
+                    internal_aes_state[byte_idx_in_block] = pt_byte ^ orig_ct_byte
+                    recovered_block.insert(0,pt_byte)
+                    #print('internal_aes_state: ' + bytes(internal_aes_state).hex() )
+                    #print( recovered_block )
+                    break
 
-                    if byte_guess == 256:
-                        print('\nNo Valid Pad Found')
-                        break
+        try:
+            recovered_blocks.append( pkcs7_unpad(recovered_block,True) )
+        except:
+            recovered_blocks.append( recovered_block )
 
-                    if corrupt_block_idx >= 0:
-                        for i in range(blocksize):
-                            modified_ct[(corrupt_block_idx*blocksize)+i] = internal_aes_state[i] ^ expected_pad
-                        modified_ct[(corrupt_block_idx*blocksize)+byte_idx_in_block] = byte_guess
-                    else:
-                        for i in range(blocksize):
-                            modified_iv[i] = internal_aes_state[i] ^ expected_pad
-                        modified_iv[byte_idx_in_block] = byte_guess
-
-                    if padding_oracle( modified_ct, modified_iv ):
-                        #print('\nValid Pad Detected: ' + byte_guess.to_bytes().hex() )
-                        #print('Modified CT: ' + bytes(modified_ct).hex() )
-                        #print('IV: ' + bytes(modified_iv).hex() )
-                        pt_byte = byte_guess ^ orig_ct_byte ^ expected_pad
-                        internal_aes_state[byte_idx_in_block] = pt_byte ^ orig_ct_byte
-                        recovered_block.insert(0,pt_byte)
-                        #print('internal_aes_state: ' + bytes(internal_aes_state).hex() )
-                        #print( recovered_block )
-                        break
-
-            try:
-                recovered_blocks.append( pkcs7_unpad(recovered_block,True) )
-            except:
-                recovered_blocks.append( recovered_block )
-
-        result = bytearray()
-        for idx in range(len(recovered_blocks)-1,-1,-1):
-            result.extend( recovered_blocks[idx] )
-        
-        print( result.decode("utf-8") )
-        
+    result = bytearray()
+    for idx in range(len(recovered_blocks)-1,-1,-1):
+        result.extend( recovered_blocks[idx] )
+    
+    print( result.decode("utf-8") )
+    
 
 
 
-        
-        
-        
+    
+    
+    

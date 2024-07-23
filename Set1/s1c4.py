@@ -16,29 +16,27 @@ def load_data( filename ):
         return lines
 
 
-if __name__ == '__main__':
+print('Matasano Crypto Challenges')
+print('Set 1, Challenge 4 - Detect single-character XOR')
+print('------------------------------------------------')
 
-    print('Matasano Crypto Challenges')
-    print('Set 1, Challenge 4 - Detect single-character XOR')
-    print('------------------------------------------------')
+filedata = load_data('s1c4.dat')
+max_score = 0
+max_key = 0
+max_result = ""
 
-    filedata = load_data('s1c4.dat')
-    max_score = 0
-    max_key = 0
-    max_result = ""
+for line in filedata:    
+    xor_enc_data = bytes.fromhex(line)
+    for i in range(256):
+        key_guess = create_xor_key( len(xor_enc_data), i )
+        result = buffer_xor( xor_enc_data, key_guess )
 
-    for line in filedata:    
-        xor_enc_data = bytes.fromhex(line)
-        for i in range(256):
-            key_guess = create_xor_key( len(xor_enc_data), i )
-            result = buffer_xor( xor_enc_data, key_guess )
+        score = ascii_range_score( result )
+        if( score > max_score ):
+            max_score = score
+            max_key = i
+            max_result = result
 
-            score = ascii_range_score( result )
-            if( score > max_score ):
-                max_score = score
-                max_key = i
-                max_result = result
-
-    # Display results
-    print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
+# Display results
+print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
 

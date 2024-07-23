@@ -14,29 +14,28 @@ def load_base64_data( filename: str ) -> bytes:
         return data
 
 
-if __name__ == '__main__':
-    print('Matasano Crypto Challenges')
-    print('Set 2, Challenge 10 - Implement CBC mode')
-    print('------------------------------------------')
+print('Matasano Crypto Challenges')
+print('Set 2, Challenge 10 - Implement CBC mode')
+print('------------------------------------------')
 
-    key = bytes("YELLOW SUBMARINE", "utf-8")
-    iv = bytes("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00","utf-8")
-    ciphertext = load_base64_data('s2c10.dat')
+key = bytes("YELLOW SUBMARINE", "utf-8")
+iv = bytes("\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00","utf-8")
+ciphertext = load_base64_data('s2c10.dat')
 
-    print('\nCiphertext:')
-    for line in hexdump( ciphertext ):
-        print(line)
+print('\nCiphertext:')
+for line in hexdump( ciphertext ):
+    print(line)
 
-    padded_plaintext = decrypt_aes_manual_cbc( ciphertext, key, iv )
+padded_plaintext = decrypt_aes_manual_cbc( ciphertext, key, iv )
 
-    print('\nPadded-Plaintext:')
-    for line in hexdump( padded_plaintext ):
-        print(line)
+print('\nPadded-Plaintext:')
+for line in hexdump( padded_plaintext ):
+    print(line)
 
-    print('\nResult:')
-    result = pkcs7_unpad( padded_plaintext )
-    print( result.decode("utf-8") )
+print('\nResult:')
+result = pkcs7_unpad( padded_plaintext )
+print( result.decode("utf-8") )
 
 
-    print( base64.b64encode( result ) )
+print( base64.b64encode( result ) )
    
