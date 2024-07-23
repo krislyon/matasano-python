@@ -7,7 +7,7 @@ import random
 from typing import Dict,Callable
 sys.path.append('../utils')
 from stream_utils import encrypt_aes_ctr, decrypt_aes_ctr, AesCtrKeystreamGenerator
-from xor_utils import buffer_xor
+from xor_utils import buffer_xor, detect_diff_start
 from text_utils import hexdump
 
 aeskey = random.randbytes(16)
@@ -33,14 +33,13 @@ def is_admin( token:bytes ):
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
     print('Set 4, Challenge 26 - CTR BitFlipping Attacks')
-    print('------------------------------------------')
+    print('---------------------------------------------')
 
     # determine userdata_idx in ciphertext
     userdata_idx = 0
     ct_a = create_token( "A" )
     ct_b = create_token( "B" )
-    while ct_a[userdata_idx] == ct_b[userdata_idx]:
-        userdata_idx += 1
+    userdata_idx = detect_diff_start( ct_a, ct_b )
     print("userdata_idx: " + str(userdata_idx))
 
     attack_input_1 = "FFFFFFFFFFFFFFF"

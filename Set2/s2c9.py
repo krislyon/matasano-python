@@ -1,5 +1,5 @@
 # Matasano Crypto Challenges
-# Set 2, Challenge 9 - Convert hex to base64
+# Set 2, Challenge 9 - Implement PKCS#7 Padding
 #
 print('Matasano Crypto Challenges')
 print('Set 2, Challenge 9 - Implement PKCS#7 Padding')

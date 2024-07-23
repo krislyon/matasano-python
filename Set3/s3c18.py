@@ -15,7 +15,7 @@ from stream_utils import decrypt_aes_ctr
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
     print('Set 3, Challenge 18 - Implement CTR, the stream cipher mode')
-    print('--------------------------------------------')
+    print('-----------------------------------------------------------')
 
     
     ciphertext = base64.b64decode("L77na/nrFsKvynd6HzOoG7GHTLXsTVu9qvY/2syLXzhPweyyMTJULu/6/kXX0KSvoOLSFQ==")    

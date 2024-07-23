@@ -1,5 +1,5 @@
 # Matasano Crypto Challenges
-# Set 2, Challenge 10 - Convert hex to base64
+# Set 2, Challenge 10 - Implement CBC mode
 #
 from Crypto.Cipher import AES
 import sys

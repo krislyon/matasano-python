@@ -25,6 +25,11 @@ def decrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
     return decrypted
 
 if __name__ == '__main__':
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 7 - AES ECB Mode')
+    print('------------------------------------------------')
+    print('')
+
     ciphertext = load_data('s1c7.dat')
     key = bytes('YELLOW SUBMARINE',"utf-8")
     plaintext = decrypt_aes_ecb(ciphertext,key)

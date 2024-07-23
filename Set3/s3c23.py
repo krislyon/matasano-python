@@ -11,7 +11,7 @@ import time
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
     print('Set 3, Challenge 23 - Clone an MT19937 from its output')
-    print('---------------------------------------------------------')
+    print('------------------------------------------------------')
 
 randseed = random.randint(0,0xffffffff)
 rng = mt.MT19937(randseed)

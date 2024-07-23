@@ -34,7 +34,7 @@ def recoverTimeSeed( known_output ):
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
     print('Set 3, Challenge 22 - Crack an MT19937 seed')
-    print('---------------------------------------------------------')
+    print('-------------------------------------------')
 
 
 output = getRNGOutput( 100 )

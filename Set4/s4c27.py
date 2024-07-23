@@ -35,7 +35,7 @@ def receiver_decrypt_data( token:bytes ):
 if __name__ == '__main__':
     print('Matasano Crypto Challenges')
     print('Set 4, Challenge 27 - Recover the key from CBC with IV = Key')
-    print('------------------------------------------')
+    print('------------------------------------------------------------')
 
     msg = "How much wood can a woodchuck chuck!"
 

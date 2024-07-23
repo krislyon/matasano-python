@@ -108,3 +108,28 @@ def recover_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> b
         print('Recovered Key: ' + str(result) )
 
     return result
+
+def detect_diff_start( buf1:bytes, buf2:bytes ):
+    idx = 0
+    lb1 = len(buf1)
+    lb2 = len(buf2)
+    while( buf1[idx] == buf2[idx] and idx < lb1 and idx < lb2 ):
+        idx += 1
+
+    if( idx == lb1 or idx == lb2 ):
+        return -1
+
+    return idx
+
+def detect_diff_end( buf1:bytes, buf2:bytes ):
+    idx = 0
+    lb1 = len(buf1)
+    lb2 = len(buf2)
+    while( buf1[idx] != buf2[idx] and idx < lb1 and idx < lb2 ):
+        idx += 1
+
+    if( idx == lb1 or idx == lb2 ):
+        return -1
+
+    return idx
+
