@@ -45,6 +45,13 @@ def frequency_score(buffer:bytes) -> list[float]:
 
     return freqArray
 
+
+def in_simple_alpha_range(c:int) -> bool:
+    if ( ((c>=32) and (c<=126)) or ((c>=9) and (c<=13)) ):
+        return True
+    else:
+        return False
+
 def in_ascii_alpha_range(c:int) -> bool:
     if ( ((c>=48) and (c<=57)) or ((c>=65) and (c<=90)) or ((c>=97) and (c<=122)) or (c==32) ):
         return True
