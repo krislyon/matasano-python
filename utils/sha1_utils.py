@@ -1,18 +1,38 @@
 # Python of SHA1 from Chat Gippity.
 
 import struct
+import random
 
-H = [0x67452301,0xEFCDAB89,0x98BADCFE,0x10325476,0xC3D2E1F0]
-K = [0x5A827999,0x6ED9EBA1,0x8F1BBCDC,0xCA62C1D6]
+def generate_sha1_padding( message_length ):
+    ml = message_length * 8  # original message length in bits
+    dummymsg = bytearray(random.randbytes(message_length))
+    dummymsg.append(0x80)   # append a single '1' bit
+    while len(dummymsg) % 64 != 56:
+        dummymsg.append(0x00)  # append zeros until length is 64 bits less than a multiple of 512
+    dummymsg += struct.pack('>Q', ml)  # append ml as 64-bit big-endian integer
+    return bytes(dummymsg[message_length:])
+
 def hash_sha1(message):
+    return hash_sha1_set_state( message )
+
+def hash_sha1_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_C=0x98BADCFE, STATE_D=0x10325476, STATE_E=0xC3D2E1F0, forcelen=False, debug_state=False ):
+
+    H = [STATE_A, STATE_B, STATE_C, STATE_D, STATE_E]
+    K = [0x5A827999,0x6ED9EBA1,0x8F1BBCDC,0xCA62C1D6]
+
     message = bytearray(message)
-    ml = len(message) * 8  # original message length in bits
+
+    # Apply padding if it was passed (for forgery), otherwise calculate it and apply it.
+    if( forcelen != False ):
+        ml = forcelen * 8
+    else:
+        ml = len(message) * 8  # original message length in bits
     message.append(0x80)   # append a single '1' bit
     while len(message) % 64 != 56:
         message.append(0x00)  # append zeros until length is 64 bits less than a multiple of 512
     message += struct.pack('>Q', ml)  # append ml as 64-bit big-endian integer
 
-    # Process each 512-bit chunk
+    # Process each 512-bit (64 byte) chunk
     for offset in range(0, len(message), 64):
         chunk = message[offset:offset + 64]
 
@@ -55,6 +75,10 @@ def hash_sha1(message):
         H[3] = (H[3] + d) & 0xFFFFFFFF
         H[4] = (H[4] + e) & 0xFFFFFFFF
 
+        if( debug_state ):
+            print(f"\t{offset/64}: {[hex(a) for a in H]}")
+
+
     # Produce the final hash value (big-endian)
     hash_hex = '{:08x}{:08x}{:08x}{:08x}{:08x}'.format(*H)
     return bytes.fromhex(hash_hex)
@@ -67,3 +91,19 @@ def hmac_sha1( message:bytes, key:bytes ):
     pt.extend(message)
     return hash_sha1(pt)
     
+def validate_hmac( message:bytes, key:bytes, expected:bytes ):
+    calculated = hmac_sha1( message, key )
+    if( calculated == expected ):
+        return True
+    
+    return False
+
+def recover_sha1_state( sha1hash ):
+    hexhash = sha1hash.hex()
+    a = int(hexhash[0:8],16)
+    b = int(hexhash[8:16],16)
+    c = int(hexhash[16:24],16)
+    d = int(hexhash[24:32],16)
+    e = int(hexhash[32:40],16)
+    return (a,b,c,d,e)
+
