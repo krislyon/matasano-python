@@ -3,19 +3,13 @@
 import struct
 import random
 
-def generate_sha1_padding( message_length ):
-    ml = message_length * 8  # original message length in bits
-    dummymsg = bytearray(random.randbytes(message_length))
-    dummymsg.append(0x80)   # append a single '1' bit
-    while len(dummymsg) % 64 != 56:
-        dummymsg.append(0x00)  # append zeros until length is 64 bits less than a multiple of 512
-    dummymsg += struct.pack('>Q', ml)  # append ml as 64-bit big-endian integer
-    return bytes(dummymsg[message_length:])
+def sha1_hash(message):
+    return sha1_hash_set_state( message )
 
-def hash_sha1(message):
-    return hash_sha1_set_state( message )
+def sha1_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_C=0x98BADCFE, STATE_D=0x10325476, STATE_E=0xC3D2E1F0, forcelen=False, debug_state=False ):
 
-def hash_sha1_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_C=0x98BADCFE, STATE_D=0x10325476, STATE_E=0xC3D2E1F0, forcelen=False, debug_state=False ):
+    def rotate_left(n, b):
+        return ((n << b) | (n >> (32 - b))) & 0xFFFFFFFF
 
     H = [STATE_A, STATE_B, STATE_C, STATE_D, STATE_E]
     K = [0x5A827999,0x6ED9EBA1,0x8F1BBCDC,0xCA62C1D6]
@@ -78,27 +72,25 @@ def hash_sha1_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_
         if( debug_state ):
             print(f"\t{offset/64}: {[hex(a) for a in H]}")
 
+    if( debug_state ):
+        print(f"FNL\t{offset/64}: {[hex(a) for a in H]}")
 
     # Produce the final hash value (big-endian)
     hash_hex = '{:08x}{:08x}{:08x}{:08x}{:08x}'.format(*H)
     return bytes.fromhex(hash_hex)
 
-def rotate_left(n, b):
-    return ((n << b) | (n >> (32 - b))) & 0xFFFFFFFF
-
-def hmac_sha1( message:bytes, key:bytes ):
+def sha1_hmac( message:bytes, key:bytes ):
     pt = bytearray(key)
     pt.extend(message)
-    return hash_sha1(pt)
+    return sha1_hash(pt)
     
-def validate_hmac( message:bytes, key:bytes, expected:bytes ):
-    calculated = hmac_sha1( message, key )
+def sha1_hmac_validate( message:bytes, key:bytes, expected:bytes ):
+    calculated = sha1_hmac( message, key )
     if( calculated == expected ):
         return True
-    
     return False
 
-def recover_sha1_state( sha1hash ):
+def sha1_recover_state( sha1hash ):
     hexhash = sha1hash.hex()
     a = int(hexhash[0:8],16)
     b = int(hexhash[8:16],16)
@@ -107,3 +99,11 @@ def recover_sha1_state( sha1hash ):
     e = int(hexhash[32:40],16)
     return (a,b,c,d,e)
 
+def sha1_generate_padding( message_length ):
+    ml = message_length * 8 
+    dummymsg = bytearray(random.randbytes(message_length))
+    dummymsg.append(0x80)   
+    while len(dummymsg) % 64 != 56:
+        dummymsg.append(0x00)  
+    dummymsg += struct.pack('>Q', ml)  
+    return bytes(dummymsg[message_length:])
