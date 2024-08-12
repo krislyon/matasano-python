@@ -4,7 +4,7 @@
 import sys
 import random
 sys.path.append('../utils')
-from md4_utils import md4_hmac, md4_hash_set_state, md4_generate_padding, md4_hmac_validate, md4_recover_state, md4_hash
+from md4_utils import md4_keyed_mac, md4_hash_set_state, md4_generate_padding, md4_keyed_mac_validate, md4_recover_state, md4_hash
 
 def get_random_word(file_path):
     # Open and read the file
@@ -46,8 +46,8 @@ original_message_bytes = bytes("comment1=cooking%20MCs;userdata=foo;comment2=%20
 
 hmac_key_bytes = bytes(get_random_word(file_path),"utf-8")
 
-original_hmac = md4_hmac( original_message_bytes, hmac_key_bytes, debug_state=False )
-original_validation = md4_hmac_validate( original_message_bytes, hmac_key_bytes, original_hmac )
+original_hmac = md4_keyed_mac( original_message_bytes, hmac_key_bytes, debug_state=False )
+original_validation = md4_keyed_mac_validate( original_message_bytes, hmac_key_bytes, original_hmac )
 print(f"Random Key:\t\t\t{hmac_key_bytes.decode("utf-8")}")
 print(f"Original Message:\t\t{original_message_bytes.decode("utf-8")}")
 print(f"Original Message HMAC:\t\t{original_hmac.hex()}" )
@@ -56,7 +56,7 @@ print(f"Validate Original HMAC:\t\t{ "***** SUCCESS *****" if original_validatio
 for keylen in range(0,20):
 
     (forged_message_bytes,forged_hmac) = forge_hmac( original_message_bytes, original_hmac, keylen )
-    forged_validation = md4_hmac_validate( forged_message_bytes, hmac_key_bytes, forged_hmac )
+    forged_validation = md4_keyed_mac_validate( forged_message_bytes, hmac_key_bytes, forged_hmac )
 
     print(f"\n\n---- Trying HMAC Key Length: {keylen} ----")
     print(f"Forged Message:\t\t\t{forged_message_bytes}")

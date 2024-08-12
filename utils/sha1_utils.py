@@ -79,13 +79,13 @@ def sha1_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_
     hash_hex = '{:08x}{:08x}{:08x}{:08x}{:08x}'.format(*H)
     return bytes.fromhex(hash_hex)
 
-def sha1_hmac( message:bytes, key:bytes ):
+def sha1_keyed_mac( message:bytes, key:bytes ):
     pt = bytearray(key)
     pt.extend(message)
     return sha1_hash(pt)
     
-def sha1_hmac_validate( message:bytes, key:bytes, expected:bytes ):
-    calculated = sha1_hmac( message, key )
+def sha1_keyed_mac_validate( message:bytes, key:bytes, expected:bytes ):
+    calculated = sha1_keyed_mac( message, key )
     if( calculated == expected ):
         return True
     return False

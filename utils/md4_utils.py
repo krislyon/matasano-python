@@ -133,13 +133,13 @@ def md4_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xefcdab89, STATE_C
 def md4_hash(message, debug_state=False):
     return md4_hash_set_state( message, debug_state=debug_state )
 
-def md4_hmac( message:bytes, key:bytes, debug_state=False ):
+def md4_keyed_mac( message:bytes, key:bytes, debug_state=False ):
     pt = bytearray(key)
     pt.extend(message)
     return md4_hash(pt,debug_state=debug_state)
 
-def md4_hmac_validate( message:bytes, key:bytes, expected:bytes ):
-    calculated = md4_hmac( message, key )
+def md4_keyed_mac_validate( message:bytes, key:bytes, expected:bytes ):
+    calculated = md4_keyed_mac( message, key )
     if( calculated == expected ):
         return True
     return False
