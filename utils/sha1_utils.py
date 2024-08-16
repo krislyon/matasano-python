@@ -3,8 +3,8 @@
 import struct
 import random
 
-def sha1_hash(message):
-    return sha1_hash_set_state( message )
+def sha1_hash(message,debug_state=False):
+    return sha1_hash_set_state( message, debug_state=debug_state )
 
 def sha1_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_C=0x98BADCFE, STATE_D=0x10325476, STATE_E=0xC3D2E1F0, forcelen=False, debug_state=False ):
 
@@ -90,6 +90,32 @@ def sha1_keyed_mac_validate( message:bytes, key:bytes, expected:bytes ):
         return True
     return False
 
+def sha1_hmac( message:bytes, key:bytes ):
+    blocksize = 64
+    ipad = bytes([0x36] * blocksize)
+    opad = bytes([0x5c] * blocksize)
+
+    # if key is larger than blocksize, hash it.
+    if( len(key) > blocksize ):
+        hmac_key = bytearray(sha1_hash( key ))
+    else:
+        hmac_key = bytearray(key)
+
+    # zero pad key to blocksize
+    while len(hmac_key) < blocksize:
+        hmac_key.append(0x00)
+
+    # HMAC Pass-1
+    r1_data = bytearray([b1 ^ b2 for b1, b2 in zip( hmac_key, ipad )])
+    r1_data.extend( message )
+    r1_result = sha1_hash( r1_data )
+
+    # HMAC Pass-2
+    r2_data = bytearray([b1 ^ b2 for b1, b2 in zip( hmac_key, opad )])
+    r2_data.extend( r1_result )
+    
+    return sha1_hash(r2_data)
+
 def sha1_recover_state( sha1hash ):
     hexhash = sha1hash.hex()
     a = int(hexhash[0:8],16)
@@ -107,3 +133,20 @@ def sha1_generate_padding( message_length ):
         dummymsg.append(0x00)  
     dummymsg += struct.pack('>Q', ml)  
     return bytes(dummymsg[message_length:])
+
+if __name__ == "__main__":
+
+    def sha1_run_test_vector( input, expected ):
+        output = sha1_hash(input,debug_state=False).hex()
+        print(f"{"Success" if output == expected else "Failure"} --- sha1({input}): '{output}', expected: '{expected}' ")
+
+    def sha1_hmac_run_test_vector( input, key, expected ):
+        output = sha1_hmac(input,key).hex()
+        print(f"{"Success" if output == expected else "Failure"} --- hmac-sha1({input}): '{output}', expected: '{expected}' ")
+
+
+    sha1_run_test_vector( b"", "da39a3ee5e6b4b0d3255bfef95601890afd80709" )
+    sha1_run_test_vector( b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq","84983e441c3bd26ebaae4aa1f95129e5e54670f1" )
+    sha1_run_test_vector( b"abc","a9993e364706816aba3e25717850c26c9cd0d89d" )
+
+    sha1_hmac_run_test_vector( b"The quick brown fox jumps over the lazy dog", b"key", "de7c9b85b8b78aa6bc8a7a36f70a90701c9db4d9" )
