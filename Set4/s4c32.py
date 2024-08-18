@@ -206,6 +206,6 @@ print(f'secret hmac:\t{secret_hmac}' )
 (result, hmac ) = hmac_timing_attack( secret_hmac, data, request_validate )
 
 if( result ):
-    print(f'Identified hmac for file as: {hmac}')
+    print(f'Identified hmac for file as: {hmac.hex()}')
 else:
     print(f"Attack Failed")
