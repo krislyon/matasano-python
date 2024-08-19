@@ -41,14 +41,14 @@ def request_key_exchange_set_params( p:bytes, g:bytes ):
     request_url = SERVER_ADDRESS + ':' + SERVER_PORT + URL_KEY_PARAM
     response = requests.get( request_url, params=payload )
     jdict = response.json()
-    session_id_hex = jdict['session-id']
-
-    print(jdict)
+    session_id = bytes.fromhex( jdict['session-id'] )
+    dh_p = bytes.fromhex(jdict['p'])
+    dh_g = bytes.fromhex(jdict['g'])
 
     if( jdict['result'] == 'ACK'):
-        return ( True, bytes.fromhex(session_id_hex) )
+        return ( True, session_id, dh_p, dh_g )
     else:
-        return ( False, bytes.fromhex(session_id_hex) )
+        return ( False, session_id )
 
 def request_key_exchange( session_id:bytes, p:bytes, g:bytes ):
     (client_pub, client_priv) = dh_utils.dh_create_key_exchg_data( p, g )
@@ -82,8 +82,8 @@ if __name__ == '__main__':
     p = bytes.fromhex(dh_utils.NIST_P)
     g = bytes.fromhex(dh_utils.NIST_G)
 
-    ( result, session_id ) = request_key_exchange_set_params( p, g )
-    ( key, iv ) = request_key_exchange( session_id, p, g )
+    ( result, session_id, ps, gs ) = request_key_exchange_set_params( p, g )
+    ( key, iv ) = request_key_exchange( session_id, ps, gs )
 
     print(f'session-id:\t{session_id.hex()}')
     print(f'key:\t\t{key.hex()}')

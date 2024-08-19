@@ -48,7 +48,7 @@ def handleSetParams():
     print(f'session-id:\t{session_id_hex}')
     sessions[session_id_hex] = ( session_id_hex, dh_p, dh_g )
 
-    return (jsonify({'result':'ACK','session-id':session_id_hex}), 200)
+    return (jsonify({'result':'ACK','session-id':session_id_hex, 'p': dh_p.hex(), 'g': dh_g.hex() }), 200)
 
 @app.route('/key-exchange', methods=['GET'])
 def handleKeyExchange():
