@@ -13,7 +13,7 @@ import json
 
 
 SERVER_ADDRESS = 'http://127.0.0.1'
-SERVER_PORT = '5000'
+SERVER_PORT = '5001'
 
 URL_KEY_PARAM = "/set-params"
 URL_KEY_EXCHG = "/key-exchange"
