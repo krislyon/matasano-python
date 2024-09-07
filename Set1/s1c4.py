@@ -15,28 +15,37 @@ def load_data( filename ):
         lines = file.readlines()
         return lines
 
+def run_challenge_4( path_prefix=''):
+    print()
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 4 - Detect single-character XOR')
+    print('------------------------------------------------')
+    filedata = load_data( f"{path_prefix}s1c4.dat" )
+    max_score = 0
+    max_key = 0
+    max_result = ""
 
-print('Matasano Crypto Challenges')
-print('Set 1, Challenge 4 - Detect single-character XOR')
-print('------------------------------------------------')
+    for line in filedata:    
+        xor_enc_data = bytes.fromhex(line)
+        for i in range(256):
+            key_guess = create_xor_key( i, len(xor_enc_data) )
+            result = buffer_xor( xor_enc_data, key_guess )
 
-filedata = load_data('s1c4.dat')
-max_score = 0
-max_key = 0
-max_result = ""
+            score = ascii_range_score( result )
+            if( score > max_score ):
+                max_score = score
+                max_key = i
+                max_result = result
 
-for line in filedata:    
-    xor_enc_data = bytes.fromhex(line)
-    for i in range(256):
-        key_guess = create_xor_key( len(xor_enc_data), i )
-        result = buffer_xor( xor_enc_data, key_guess )
+    # Display results
+    print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
 
-        score = ascii_range_score( result )
-        if( score > max_score ):
-            max_score = score
-            max_key = i
-            max_result = result
+    if( max_key == 53 ):
+        print('Success')
+        return True
+    else:
+        print('Failure')
+        return False
 
-# Display results
-print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
-
+if __name__ == '__main__':
+    run_challenge_4()

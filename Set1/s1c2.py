@@ -16,18 +16,25 @@ expected = '746865206b696420646f6e277420706c6179'
 indata =   '1c0111001f010100061a024b53535009181c'
 xorkey =   '686974207468652062756c6c277320657965'
 
-print('Matasano Crypto Challenges')
-print('Set 1, Challenge 2 - Fixed XOR')
-print('------------------------------')
+def run_challenge_2():
+    print('')
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 2 - Fixed XOR')
+    print('------------------------------')
 
-result = buffer_xor( bytes.fromhex(indata), bytes.fromhex(xorkey) )
+    result = buffer_xor( bytes.fromhex(indata), bytes.fromhex(xorkey) )
 
-print('Input Data:  ' + indata )
-print('Key Data:    ' + xorkey )
-print('XOR Result:  ' + str(result.hex()) )
-print('Expected:    ' + expected )
+    print('Input Data:  ' + indata )
+    print('Key Data:    ' + xorkey )
+    print('XOR Result:  ' + str(result.hex()) )
+    print('Expected:    ' + expected )
 
-if result.hex() == expected:
-    print("Match")
-else:
-    print("No Match")
+    if result.hex() == expected:
+        print("Success")
+        return True
+    else:
+        print("Failed")
+        return False
+
+if __name__ == '__main__':
+    run_challenge_2()

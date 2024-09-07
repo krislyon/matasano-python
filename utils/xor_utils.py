@@ -88,7 +88,7 @@ def recover_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> b
         max_result = ""      
     
         for i in range(256):
-            key_guess = create_xor_key( len(block), i )
+            key_guess = create_xor_key( i, len(block) )
             result = buffer_xor( block, key_guess )
 
             score = ascii_range_score( result )
