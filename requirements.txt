@@ -1,0 +1,15 @@
+certifi==2024.7.4
+charset-normalizer==3.3.2
+crypto==1.4.1
+idna==3.7
+iniconfig==2.0.0
+Naked==0.1.32
+packaging==24.1
+pipdeptree==2.23.3
+pluggy==1.5.0
+pycryptodome==3.20.0
+pytest==8.3.2
+PyYAML==6.0.1
+requests==2.32.3
+shellescape==3.8.1
+urllib3==2.2.2
