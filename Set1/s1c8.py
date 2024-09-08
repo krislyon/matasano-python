@@ -2,9 +2,12 @@
 # Set 1, Challenge 8 - Detect AES in ECB mode
 #
 import base64
+import os
 
 def load_ciphertexts( filename:str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         # Read all lines into a list
         lines = file.readlines()
         result = [bytes.fromhex(l) for l in lines]
@@ -22,14 +25,14 @@ def detect_ecb( ciphertext:bytes, blocksize:int=16 ) -> bool:
 
     return False
 
-def run_challenge_8(path_prefix=""):
+def run_challenge_8():
 
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 8 - Detect AES in ECB mode')
     print('------------------------------------------------')
     print('')
 
-    ciphertexts = load_ciphertexts(f'{path_prefix}s1c8.dat')
+    ciphertexts = load_ciphertexts('s1c8.dat')
     for ciphertext in ciphertexts:
         result = detect_ecb( ciphertext )
         if result:

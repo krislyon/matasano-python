@@ -26,24 +26,24 @@ def test___set1___challenge_3():
     assert result == expected
 
 def test___set1___challenge_4():
-    result = run_challenge_4( path_prefix="../Set1/" )
+    result = run_challenge_4()
     expected = 53
     assert result == expected
 
 def test___set1___challenge_5():
-    result = run_challenge_5( path_prefix="../Set1/" )
+    result = run_challenge_5()
     expected = "0b3637272a2b2e63622c2e69692a23693a2a3c6324202d623d63343c2a26226324272765272a282b2f20430a652e2c652a3124333a653e2b2027630c692b20283165286326302e27282f"
     assert result == expected
 
 def test___set1___challenge_6():
-    result = run_challenge_6( path_prefix="../Set1/" )
+    result = run_challenge_6()
     expected = b'Terminator X: Bring the noise'
     assert result == expected
 
 def test___set1___challenge_7():
-    result = run_challenge_7(path_prefix="../Set1/")
+    result = run_challenge_7()
     assert result.endswith(b'Play that funky music \x0A')
 
 def test___set1___challenge_8():
-    result = run_challenge_8(path_prefix="../Set1/")
+    result = run_challenge_8()
     assert result.endswith("4040deb0ab51b29933f2c123c58386b06fba186a")

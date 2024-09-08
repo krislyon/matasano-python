@@ -7,6 +7,7 @@ import random
 import time
 import itertools
 import base64
+import os
 from stream_utils import encrypt_aes_ctr, decrypt_aes_ctr, AesCtrKeystreamGenerator
 from xor_utils import buffer_xor
 from text_utils import hex_space
@@ -15,7 +16,9 @@ aeskey = random.randbytes(16)
 nonce = bytes.fromhex("0000000000000000")
 
 def load_base64_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = base64.b64decode( file.read() )
         return data
 

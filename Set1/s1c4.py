@@ -2,6 +2,7 @@
 # Set 1, Challenge 4 - Detect single-character XOR
 #
 import sys
+import os
 sys.path.append('../utils')
 from xor_utils import buffer_xor, create_xor_key
 from text_utils import ascii_range_score
@@ -10,17 +11,19 @@ hex_data = "1b37373331363f78151b7f2b783431333d78397828372d363c78373e783a393b3736
 xor_enc_data = bytes.fromhex( hex_data )
 
 def load_data( filename ):
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         # Read all lines into a list
         lines = file.readlines()
         return lines
 
-def run_challenge_4( path_prefix=''):
+def run_challenge_4():
     print()
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 4 - Detect single-character XOR')
     print('------------------------------------------------')
-    filedata = load_data( f"{path_prefix}s1c4.dat" )
+    filedata = load_data( "s1c4.dat" )
     max_score = 0
     max_key = 0
     max_result = ""

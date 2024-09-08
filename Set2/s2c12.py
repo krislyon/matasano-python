@@ -4,13 +4,16 @@
 import sys
 import base64
 import random
+import os
 from typing import Dict, Tuple
 sys.path.append('../utils')
 from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb,detect_blockcipher_metrics
 from text_utils import hexdump
 
 def load_base64_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = base64.b64decode( file.read() )
         return data
 

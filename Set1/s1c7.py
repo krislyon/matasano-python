@@ -3,6 +3,7 @@
 #
 import base64
 import binascii
+import os
 import sys
 sys.path.append('../utils')
 from text_utils import hexdump
@@ -11,7 +12,9 @@ from block_utils import pkcs7_unpad
 from Crypto.Cipher import AES
 
 def load_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = base64.b64decode( file.read() )
         return data
 
@@ -28,14 +31,14 @@ def decrypt_aes_ecb(ciphertext: bytes, key: bytes) -> bytes:
     # Unpad data
     return pkcs7_unpad( decrypted )
 
-def run_challenge_7(path_prefix=""):
+def run_challenge_7():
     print('')
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 7 - AES ECB Mode')
     print('---------------------------------')
     print('')
 
-    ciphertext = load_data(f'{path_prefix}s1c7.dat')
+    ciphertext = load_data('s1c7.dat')
     key = bytes('YELLOW SUBMARINE',"utf-8")
     plaintext = decrypt_aes_ecb(ciphertext,key)
     print('data: ',plaintext.decode("utf-8"))

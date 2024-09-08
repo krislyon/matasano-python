@@ -3,12 +3,15 @@
 #
 import sys
 import base64
+import os
 import random
 sys.path.append('../utils')
 from block_utils import pkcs7_pad, pkcs7_unpad, encrypt_aes_manual_cbc, decrypt_aes_manual_cbc
 
 def load_base64_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = [base64.b64decode(line) for line in file.readlines()]
         return data
 

@@ -2,17 +2,20 @@
 # Set 1, Challenge 6 - Break repeating-key XOR
 #
 import base64
+import os
 import sys
 sys.path.append('../utils')
 
 from xor_utils import *
 
 def load_data( filename ):
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = base64.b64decode( file.read() )
         return data
 
-def run_challenge_6(path_prefix=""):
+def run_challenge_6():
     print()
     print('Matasano Crypto Challenges')
     print('Set 1, Challenge 6 - Break repeating-key XOR')
@@ -20,7 +23,7 @@ def run_challenge_6(path_prefix=""):
     print('')
 
     # Load Data
-    ciphertext = load_data(f'{path_prefix}s1c6.dat')
+    ciphertext = load_data('s1c6.dat')
 
     # Calculate the keysize used to encyrpt the data
     (keySize,candiates) = calculate_xor_keysize( ciphertext=ciphertext, debug=False )

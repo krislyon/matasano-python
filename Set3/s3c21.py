@@ -3,10 +3,13 @@
 #
 import sys
 sys.path.append('../utils')
+import os
 import mt19937 as mt
 
 def load_test_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         return [ int(line) for line in file.readlines()]
         
 

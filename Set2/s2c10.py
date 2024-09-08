@@ -4,12 +4,15 @@
 from Crypto.Cipher import AES
 import sys
 import base64
+import os
 sys.path.append('../utils')
 from block_utils import pkcs7_pad, pkcs7_unpad, split_blocks, decrypt_aes_manual_cbc
 from text_utils import hexdump
 
 def load_base64_data( filename: str ) -> bytes:
-    with open( filename, 'r') as file:
+    module_dir = os.path.dirname(os.path.abspath(__file__)) 
+    filepath = os.path.join( module_dir, filename )
+    with open( filepath, 'r') as file:
         data = base64.b64decode( file.read() )
         return data
 
