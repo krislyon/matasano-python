@@ -6,7 +6,11 @@ import base64
 import os
 import random
 import itertools
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from xor_utils import buffer_xor
 from stream_utils import encrypt_aes_ctr, AesCtrKeystreamGenerator
 from text_utils import in_ascii_alpha_range

@@ -5,7 +5,10 @@ from Crypto.Cipher import AES
 import sys
 import base64
 import os
-sys.path.append('../utils')
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from block_utils import pkcs7_pad, pkcs7_unpad, split_blocks, decrypt_aes_manual_cbc
 from text_utils import hexdump
 

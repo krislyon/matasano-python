@@ -2,7 +2,11 @@
 # Set 5, Challenge 34 - Implement a MITM key-fixing attack on Diffie-Hellman with parameter injection
 #
 import sys
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 import argparse
 import dh_utils
 import sha1_utils

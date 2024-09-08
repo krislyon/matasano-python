@@ -5,7 +5,11 @@ import sys
 import time
 import requests
 import json
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from sha1_utils import sha1_hmac
 
 url_hmac = "http://127.0.0.1:5000/hmac"

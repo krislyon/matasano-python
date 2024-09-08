@@ -4,8 +4,12 @@
 import sys
 import base64
 import random
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from typing import Dict,Callable
-sys.path.append('../utils')
 from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb, detect_blockcipher_metrics, split_blocks, detect_duplicate_blocks
 from text_utils import hexdump
 

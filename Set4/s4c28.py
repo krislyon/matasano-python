@@ -3,7 +3,11 @@
 #
 import sys
 import random
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from sha1_utils import hmac_sha1
 
 

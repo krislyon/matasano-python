@@ -2,7 +2,11 @@
 # Set 3, Challenge 22 - Crack an MT19937 seed
 #
 import sys
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 import mt19937 as mt
 import random
 import time

@@ -5,8 +5,11 @@ import sys
 import base64
 import random
 import itertools
-sys.path.append('../utils')
-
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from stream_utils import encrypt_aes_ctr, AesCtrKeystreamGenerator
 from xor_utils import recover_xor_key, transpose_data_blocks
 

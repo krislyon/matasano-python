@@ -4,8 +4,12 @@
 import sys
 import random
 import time
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from flask import Flask, jsonify, request
-sys.path.append('../utils')
 from sha1_utils import sha1_hmac
 
 file_path = '/usr/share/dict/words'

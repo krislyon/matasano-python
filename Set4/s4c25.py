@@ -2,7 +2,11 @@
 # Set 4, Challenge 25 - Break "random access read/write" AES CTR
 #
 import sys
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 import random
 import time
 import itertools

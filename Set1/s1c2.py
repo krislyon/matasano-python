@@ -9,7 +9,11 @@
 #
 # 746865206b696420646f6e277420706c6179
 import sys
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from xor_utils import buffer_xor
 
 expected = '746865206b696420646f6e277420706c6179'

@@ -4,7 +4,10 @@
 import math
 import os
 import sys
-sys.path.append('../utils')
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from xor_utils import buffer_xor, RepeatingKeyGenerator
 from text_utils import ascii_range_score
 

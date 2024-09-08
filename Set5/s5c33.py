@@ -2,7 +2,11 @@
 # Set 5, Challenge 33 - Implement Diffie-Hellman
 #
 import sys
-sys.path.append('../utils')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
 from dh_utils import *
 
 def sample_key_exchg_simple(p:int,g:int,debug=False):

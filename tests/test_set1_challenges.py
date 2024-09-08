@@ -1,5 +1,9 @@
 import sys
-sys.path.append('../Set1')
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+SET1_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../Set1') )
+if( SET1_DIR not in sys.path ):
+    sys.path.append( SET1_DIR )
 from s1c1 import run_challenge_1
 from s1c2 import run_challenge_2
 from s1c3 import run_challenge_3
