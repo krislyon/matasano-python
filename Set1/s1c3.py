@@ -31,12 +31,7 @@ def run_challenge_3():
     # Display results.
     print(  "ascii-score: " + str( maxScore ) + ", key: " + str(maxKey) + ", '" + maxResult.decode('utf-8') + "'" )
 
-    if( maxKey == b"XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" ):
-        print('Success')
-        return True
-    else:
-        print('Failure')
-        return False
+    return maxKey
 
 if __name__ == '__main__':
     run_challenge_3()

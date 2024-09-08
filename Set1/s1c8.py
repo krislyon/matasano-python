@@ -22,15 +22,20 @@ def detect_ecb( ciphertext:bytes, blocksize:int=16 ) -> bool:
 
     return False
 
+def run_challenge_8(path_prefix=""):
 
-print('Matasano Crypto Challenges')
-print('Set 1, Challenge 8 - Detect AES in ECB mode')
-print('------------------------------------------------')
-print('')
+    print('Matasano Crypto Challenges')
+    print('Set 1, Challenge 8 - Detect AES in ECB mode')
+    print('------------------------------------------------')
+    print('')
 
-ciphertexts = load_ciphertexts('s1c8.dat')
-for ciphertext in ciphertexts:
-    result = detect_ecb( ciphertext )
-    if result:
-        print("ECB Mode detected.")
-        print("Duplicate blocks detected in ciphertext:\n" + str( ciphertext.hex() ))
+    ciphertexts = load_ciphertexts(f'{path_prefix}s1c8.dat')
+    for ciphertext in ciphertexts:
+        result = detect_ecb( ciphertext )
+        if result:
+            print("ECB Mode detected.")
+            print("Duplicate blocks detected in ciphertext:\n" + str( ciphertext.hex() ))
+            return str( ciphertext.hex() )
+
+if __name__ == "__main__":
+    run_challenge_8()

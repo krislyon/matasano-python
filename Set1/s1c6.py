@@ -38,12 +38,7 @@ def run_challenge_6(path_prefix=""):
     print('\nResult:')
     print( result.decode('utf-8'))
 
-    if( recovered_key == b'Terminator X: Bring the noise' ):
-        print("Success")
-        return True
-    else:
-        print("Failure")
-        return False
+    return recovered_key
 
 if __name__ == "__main__":
     run_challenge_6()

@@ -39,13 +39,7 @@ def run_challenge_4( path_prefix=''):
 
     # Display results
     print(  "ascii-score: " + str( max_score ) + ", key: " + str(max_key) + ", '" + max_result.decode('utf-8') + "'" )
-
-    if( max_key == 53 ):
-        print('Success')
-        return True
-    else:
-        print('Failure')
-        return False
+    return max_key
 
 if __name__ == '__main__':
     run_challenge_4()

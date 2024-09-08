@@ -29,12 +29,7 @@ def run_challenge_2():
     print('XOR Result:  ' + str(result.hex()) )
     print('Expected:    ' + expected )
 
-    if result.hex() == expected:
-        print("Success")
-        return True
-    else:
-        print("Failed")
-        return False
+    return result.hex()
 
 if __name__ == '__main__':
     run_challenge_2()

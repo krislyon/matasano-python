@@ -17,12 +17,7 @@ def run_challenge_1():
     print('Expected:   ' + expected )
     print('Calculated: ' + base64EncodedStr )
 
-    if base64EncodedStr == expected:
-        print("Success")
-        return True
-    else:
-        print("Failed")
-        return False
+    return base64EncodedStr
 
 if __name__ == '__main__':
     run_challenge_1()
