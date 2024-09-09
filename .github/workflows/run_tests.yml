@@ -22,7 +22,7 @@ jobs:
       - name: Lint with Ruff  
         run: |  
           pip install ruff  
-          ruff check --output-format github --target-version py312 .  
+          ruff check --output-format github --target-version py312 --ignore E402,F405 
         continue-on-error: true  
       - name: Test with pytest  
         run: |  
