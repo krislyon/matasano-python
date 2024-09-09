@@ -7,7 +7,6 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-import mt19937 as mt
 import random
 import time
 from stream_utils import encrypt_mt19937_stream, decrypt_mt19937_stream
@@ -20,8 +19,6 @@ def bruteforce_mt19937_seed(ct,known_bytes):
             return seed_guess
 
 def checkPRTTimeSeed(ct):
-    ctlen = len(ct)
-
     for timeseed in range( int(time.time()) - 2000, int(time.time()) + 2000 ):
         ct_check = encrypt_mt19937_stream(bytes('PASSWORD_RESET_TOKEN','utf-8'), timeseed )
         if ct_check == ct:

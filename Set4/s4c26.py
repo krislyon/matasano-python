@@ -2,17 +2,14 @@
 # Set 4, Challenge 26 - CTR BitFlipping Attack
 #
 import sys
-import base64
 import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from typing import Dict,Callable
-from stream_utils import encrypt_aes_ctr, decrypt_aes_ctr, AesCtrKeystreamGenerator
+from stream_utils import encrypt_aes_ctr
 from xor_utils import buffer_xor, detect_diff_start
-from text_utils import hexdump
 
 aeskey = random.randbytes(16)
 nonce = bytes.fromhex("0000000000000000")

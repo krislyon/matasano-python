@@ -8,10 +8,8 @@ UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 import argparse
-import dh_utils
 import sha1_utils
 import block_utils
-import random
 import requests
 from flask import Flask, jsonify, request
 
@@ -54,10 +52,9 @@ def decrypt_msg( ct:bytes, key:bytes, iv:bytes ):
 
 @app.route('/key-exchange', methods=['GET'])
 def handleKeyExchange():
-    debug = False
     dh_p = bytes.fromhex( request.args.get('p') )
     dh_g = bytes.fromhex( request.args.get('g') )
-    dh_A = bytes.fromhex( request.args.get('A') )
+    #dh_A = bytes.fromhex( request.args.get('A') )
 
     # manipulate_client_message
     client_payload = {"p": dh_p.hex(), "g": dh_g.hex(), "A": dh_p.hex()  }

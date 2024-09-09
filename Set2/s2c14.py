@@ -9,9 +9,8 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from typing import Dict,Callable
-from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb, detect_blockcipher_metrics, split_blocks, detect_duplicate_blocks
-from text_utils import hexdump
+from typing import Dict
+from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb, detect_blockcipher_metrics, detect_duplicate_blocks
 
 def load_base64_data( filename: str ) -> bytes:
     with open( filename, 'r') as file:

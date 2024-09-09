@@ -8,13 +8,11 @@ UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 import random
-import time
 import itertools
 import base64
 import os
-from stream_utils import encrypt_aes_ctr, decrypt_aes_ctr, AesCtrKeystreamGenerator
+from stream_utils import encrypt_aes_ctr, AesCtrKeystreamGenerator
 from xor_utils import buffer_xor
-from text_utils import hex_space
 
 aeskey = random.randbytes(16)
 nonce = bytes.fromhex("0000000000000000")

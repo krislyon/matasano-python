@@ -7,13 +7,10 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-import argparse
 import dh_utils
 import sha1_utils
 import block_utils
-import random
 import requests
-import json
 
 
 SERVER_ADDRESS = 'http://127.0.0.1'

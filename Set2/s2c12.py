@@ -4,15 +4,13 @@
 import sys
 import base64
 import random
-import os
-from typing import Dict, Tuple
+from typing import Dict
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 from block_utils import pkcs7_pad, encrypt_aes_ecb, detect_ecb,detect_blockcipher_metrics
-from text_utils import hexdump
 
 def load_base64_data( filename: str ) -> bytes:
     module_dir = os.path.dirname(os.path.abspath(__file__)) 

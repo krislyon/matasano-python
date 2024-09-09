@@ -8,10 +8,8 @@ UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 import argparse
-import dh_utils
 import sha1_utils
 import block_utils
-import random
 import requests
 from flask import Flask, jsonify, request
 
@@ -77,7 +75,6 @@ def decrypt_msg( ct:bytes, key:bytes, iv:bytes ):
 
 @app.route('/set-params', methods=['GET'])
 def handleSetParams():
-    debug = False
     dh_p = bytes.fromhex( request.args.get('p') )
     dh_g = bytes.fromhex( request.args.get('g') )
 
@@ -103,7 +100,6 @@ def handleSetParams():
 
 @app.route('/key-exchange', methods=['GET'])
 def handleKeyExchange():
-    debug = False
     session_id_hex = request.args.get('session-id')
     dh_p = sessions[session_id_hex][1]    
     client_pub = bytes.fromhex( request.args.get('A') )
@@ -137,7 +133,7 @@ def handleSecureMessage():
         try:    
             client_pt = decrypt_msg(ct, session_key, session_iv )
 
-        except:
+        except Exception:
             int_p_minus_one = ( int.from_bytes( dh_p, 'little', signed=False ) - 1 )
             shared_secret = int_p_minus_one.to_bytes( 192, 'little', signed=False )
             session_key = sha1_utils.sha1_hash( shared_secret )[0:16]
@@ -147,9 +143,9 @@ def handleSecureMessage():
         try:
             client_pt = client_pt.decode('utf-8')
             print(f'CLI --> SERV ({session_id_hex}):\t{client_pt}')
-        except:
+        except Exception:
             print(f'CLI --> SERV ({session_id_hex}):\t ***** UTF-8 Decode Failed *****')
-    except:
+    except Exception:
         print(f'CLI --> SERV ({session_id_hex}):\t ***** Decrypt Failed, Incorrect PKCS7 Padding *****')
 
     client_payload = { 'session-id': session_id_hex, 'message-data': ct.hex() }
@@ -163,9 +159,9 @@ def handleSecureMessage():
         try:
             server_pt = server_pt.decode('utf-8')
             print(f'SERV --> CLI ({session_id_hex}):\t{server_pt}')
-        except:
+        except Exception:
             print(f'SERV --> CLI ({session_id_hex}):\t ***** UTF-8 Decode Failed *****')  
-    except:
+    except Exception:
         print(f'SERV --> CLI ({session_id_hex}):\t ***** Decrypt Failed, Incorrect PKCS7 Padding *****')
 
     return (jsonify(server_payload), response_code )

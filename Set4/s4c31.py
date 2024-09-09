@@ -1,16 +1,8 @@
 # Matasano Crypto Challenges
 # Set 4, Challenge 29 - Implement a SHA-1 keyed MAC
 #
-import sys
 import time
 import requests
-import json
-import os
-MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
-UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
-if( UTILS_DIR not in sys.path ):
-    sys.path.append( UTILS_DIR )
-from sha1_utils import sha1_hmac
 
 url_hmac = "http://127.0.0.1:5000/hmac"
 url_validate =  "http://127.0.0.1:5000/validate"
@@ -26,7 +18,7 @@ def avg_validation_time( current_guess, i, data, api_request_fn ):
     for n in range(10):
         current_guess[i] = n
         start_time = get_time()
-        result = api_request_fn( data, current_guess.hex() )
+        api_request_fn( data, current_guess.hex() )
         end_time = get_time()
         avg_validation_time += ( end_time - start_time )
     
@@ -92,10 +84,10 @@ def request_hmac(data):
     jdict = response.json()
 
     api_version = jdict['apiVersion']
-    if( api_version == None):
-        exit(f'Target API did not return an api version.')
+    if( api_version is None):
+        exit('Target API did not return an api version.')
     elif( api_version != expected_api_version ):
-        exit(f'Target API did not return the expected api version.  Expected: {expected_api_version}, Received: {api_version}')
+        exit('Target API did not return the expected api version.  Expected: {expected_api_version}, Received: {api_version}')
 
     return jdict['signature']
 
@@ -105,8 +97,8 @@ def request_validate(data,sig):
     jdict = response.json()
 
     api_version = jdict['apiVersion']
-    if( api_version == None):
-        exit(f'Target API did not return an api version.')
+    if( api_version is None):
+        exit('Target API did not return an api version.')
     elif( api_version != expected_api_version ):
         exit(f'Target API did not return the expected api version.  Expected: {expected_api_version}, Received: {api_version}')
 
@@ -125,4 +117,4 @@ print(f'secret hmac:\t{secret_hmac}' )
 if( result ):
     print(f'Identified hmac for file as: {hmac.hex()}')
 else:
-    print(f"Attack Failed")
+    print("Attack Failed")

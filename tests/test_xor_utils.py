@@ -6,7 +6,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from xor_utils import *
+from xor_utils import RepeatingKeyGenerator, BufferGenerator, create_xor_key, create_repeating_key_buffer, detect_diff_end, detect_diff_start, transpose_data_blocks, buffer_xor, calculate_xor_keysize, repeating_key_xor
 
 def test___RepeatingKeyGenerator___stream_char():
     stream = itertools.islice( RepeatingKeyGenerator('A'), 1000 )
@@ -128,6 +128,6 @@ def test___recover_keysize():
         print(ksdict)
 
 
-        if( ksdict.get( keylen ) == None ):
+        if( ksdict.get( keylen ) is None ):
             keylist = [k for k in ksdict.keys() if ksdict[k] > 2.0]
             assert keylen in keylist, "Keysize was not in candidate list with a score above threshold value: " + str(2.0) 

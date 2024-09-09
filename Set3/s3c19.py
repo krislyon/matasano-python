@@ -3,7 +3,6 @@
 #
 import sys
 import base64
-import os
 import random
 import itertools
 import os
@@ -11,7 +10,6 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from xor_utils import buffer_xor
 from stream_utils import encrypt_aes_ctr, AesCtrKeystreamGenerator
 from text_utils import in_ascii_alpha_range
 from freq_utils import digraph_dict
@@ -36,7 +34,7 @@ def single_byte_recovery(texts,count,max_length):
 
                 if len(ct) > target_byte_idx:
                     key = int(byte_guess).to_bytes().hex()
-                    if kbGuess.get(key) == None:
+                    if kbGuess.get(key) is None:
                         kbGuess[key] = {}
                         (kbGuess[key])['asc'] = 0
                         (kbGuess[key])['cnt'] = 0
@@ -76,7 +74,7 @@ def perform_digraph_enhancement( sb_result, texts, max_length ):
                         ptB = ct[target_byte_idx+1] ^ byte_b_guess
                         digraph_key = str(ptA.to_bytes(),"utf-8") + str(ptB.to_bytes(),"utf-8")
                         freq = digraph_dict.get(digraph_key)
-                        if( freq != None ):
+                        if( freq is not None ):
                             score += freq
                             count += 1
 

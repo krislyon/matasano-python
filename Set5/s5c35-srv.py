@@ -38,16 +38,17 @@ def handleSetParams():
     dh_p = bytes.fromhex( request.args.get('p') )
     dh_g = bytes.fromhex( request.args.get('g') )
 
-    if( dh_p == None ):
+    if( dh_p is None ):
         api_error = {'error':50001, 'message':'Missing set parameter: p'}
         return (jsonify(api_error), 500)
 
-    if( dh_g == None ):
+    if( dh_g is None ):
         api_error = {'error':50002, 'message':'Missing set parameter: g'}
         return (jsonify(api_error), 500)
 
     session_id_hex = random.randbytes(16).hex()
-    if( debug ): print(f'Created session: {session_id_hex()}\n')
+    if( debug ):
+        print(f'Created session: {session_id_hex()}\n')
 
     print(f'session-id:\t{session_id_hex}')
     sessions[session_id_hex] = ( session_id_hex, dh_p, dh_g )
@@ -59,7 +60,7 @@ def handleKeyExchange():
     debug = False   
     dh_A = bytes.fromhex( request.args.get('A') )
 
-    if( dh_A == None ):
+    if( dh_A is None ):
         api_error = {'error':50003, 'message':'Missing key exhchange parameter: A'}
         return (jsonify(api_error), 500)
 
@@ -67,16 +68,20 @@ def handleKeyExchange():
     ( _, dh_p, dh_g ) = sessions[session_id_hex]
 
     session_iv = random.randbytes(16)
-    if( debug ): print(f'Created IV: {session_iv.hex()}\n')
+    if( debug ):
+        print(f'Created IV: {session_iv.hex()}\n')
 
     (srv_pub, srv_priv) = dh_utils.dh_create_key_exchg_data( dh_p, dh_g )
-    if( debug ): print(f'Server created keypair: {srv_pub.hex()}\n\n{srv_priv.hex()}\n')
+    if( debug ):
+        print(f'Server created keypair: {srv_pub.hex()}\n\n{srv_priv.hex()}\n')
 
     shared_secret = dh_utils.dh_create_shared_secret( srv_priv, dh_A , dh_p )
-    if( debug ): print(f'Server created shared secret: {shared_secret.hex()}\n')
+    if( debug ):
+        print(f'Server created shared secret: {shared_secret.hex()}\n')
 
     session_key = derive_key( shared_secret )
-    if( debug ): print(f'Server created session key: {session_key.hex()}\n')
+    if( debug ):
+        print(f'Server created session key: {session_key.hex()}\n')
 
     print(f'session-id:\t{session_id_hex}')
     print(f'session-key:\t\t{session_key.hex()}')
@@ -91,17 +96,17 @@ def handleSecureMessage():
     session_id_hex = request.args.get('session-id')
     ct = bytes.fromhex( request.args.get('message-data') )
 
-    if( session_id_hex == None ):
+    if( session_id_hex is None ):
         api_error = {'error':50004, 'message':'Missing session identifier'}
         return (jsonify(api_error), 500)
 
-    if( ct == None ):
+    if( ct is None ):
         api_error = {'error':50005, 'message':'Missing message data'}
         return (jsonify(api_error), 500)
 
     session = sessions.get(session_id_hex)
         
-    if( session == None ):
+    if( session is None ):
         api_error = {'error':50006, 'message':'Session not found.'}
         return (jsonify(api_error), 500)
 

@@ -14,12 +14,12 @@ class ScoredData:
         self.sorted = False
 
     def max( self ):
-        if( self.sorted == False ):
+        if( not self.sorted ):
             self.__sort_data()
         return self.data[0]
 
     def all( self ):
-        if( self.sorted == False ):
+        if( not self.sorted ):
             self.__sort_data()
         return self.data
 

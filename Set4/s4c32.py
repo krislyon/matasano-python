@@ -4,14 +4,12 @@
 import sys
 import time
 import requests
-import json
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 from statistics import median
-from sha1_utils import sha1_hmac
 
 url_hmac = "http://127.0.0.1:5000/hmac"
 url_validate =  "http://127.0.0.1:5000/validate"
@@ -33,8 +31,8 @@ def request_hmac(data):
     jdict = response.json()
 
     api_version = jdict['apiVersion']
-    if( api_version == None):
-        exit(f'Target API did not return an api version.')
+    if( api_version is None):
+        exit('Target API did not return an api version.')
     elif( api_version != expected_api_version ):
         exit(f'Target API did not return the expected api version.  Expected: {expected_api_version}, Received: {api_version}')
 
@@ -46,8 +44,8 @@ def request_validate(data,sig):
     jdict = response.json()
 
     api_version = jdict['apiVersion']
-    if( api_version == None):
-        exit(f'Target API did not return an api version.')
+    if( api_version is None):
+        exit('Target API did not return an api version.')
     elif( api_version != expected_api_version ):
         exit(f'Target API did not return the expected api version.  Expected: {expected_api_version}, Received: {api_version}')
 
@@ -65,7 +63,7 @@ def median_validation_time( sample_count, current_guess, i, data, api_request_fn
         current_guess[i] = n%255
 
         start_time = get_time()
-        result = api_request_fn( data, current_guess.hex() )
+        api_request_fn( data, current_guess.hex() )
         end_time = get_time()
 
         validation_times.append( (end_time-start_time) )
@@ -175,7 +173,7 @@ def hmac_timing_attack( hmac_secret, data, api_request_fn ):
         
         current_byte_timings = get_hmac_timings_for_byte( hmac_guess, i, data, api_request_fn, samples_per_byte )
 
-        if( current_byte_timings[0] == True ):
+        if( current_byte_timings[0] ):
             print('Success, aborting search.')            
             return ( True, current_byte_timings[1] )
 
@@ -212,4 +210,4 @@ print(f'secret hmac:\t{secret_hmac}' )
 if( result ):
     print(f'Identified hmac for file as: {hmac.hex()}')
 else:
-    print(f"Attack Failed")
+    print("Attack Failed")

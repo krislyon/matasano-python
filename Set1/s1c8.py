@@ -1,7 +1,6 @@
 # Matasano Crypto Challenges
 # Set 1, Challenge 8 - Detect AES in ECB mode
 #
-import base64
 import os
 
 def load_ciphertexts( filename:str ) -> bytes:
@@ -10,7 +9,7 @@ def load_ciphertexts( filename:str ) -> bytes:
     with open( filepath, 'r') as file:
         # Read all lines into a list
         lines = file.readlines()
-        result = [bytes.fromhex(l) for l in lines]
+        result = [bytes.fromhex(line) for line in lines]
         return result
 
 def detect_ecb( ciphertext:bytes, blocksize:int=16 ) -> bool:

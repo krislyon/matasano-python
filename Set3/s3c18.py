@@ -3,14 +3,11 @@
 #
 import sys
 import base64
-import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from xor_utils import buffer_xor
-from block_utils import encrypt_aes_ecb
 from stream_utils import decrypt_aes_ctr
 
 

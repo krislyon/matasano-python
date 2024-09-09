@@ -25,7 +25,7 @@ apiVersion = 2
 
 def get_random_word(file_path):
     print(args)
-    if( args.secret != None ):
+    if( args.secret is not None ):
         return args.secret
     else:
         # Open and read the file
@@ -51,7 +51,7 @@ app = Flask(__name__)
 def hmac():
     data = request.args.get('data')
 
-    if( data == None ):
+    if( data is None ):
         return (jsonify({'result': 500, 'apiVersion': apiVersion }), 500)
 
     sig = sha1_hmac( bytes(data,'utf-8'), hmac_key_bytes )
@@ -60,11 +60,11 @@ def hmac():
 @app.route('/validate', methods=['GET'])
 def validate():
     data = request.args.get('data')
-    if( data == None ):
+    if( data is None ):
         return (jsonify({'result': 500, 'apiVersion': apiVersion }), 500)
 
     sig = request.args.get('signature')
-    if( data == None ):
+    if( data is None ):
         return (jsonify({'result': 500, 'apiVersion': apiVersion }), 500)
 
     calculated = sha1_hmac( bytes(data,'utf-8'), hmac_key_bytes )

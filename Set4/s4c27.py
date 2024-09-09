@@ -2,16 +2,14 @@
 # Set 4, Challenge 27 - Recover the key from CBC with IV = Key
 #
 import sys
-import base64
 import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from typing import Dict,Callable
-from block_utils import pkcs7_pad, pkcs7_unpad, encrypt_aes_manual_cbc, decrypt_aes_manual_cbc
-from text_utils import hexdump, in_simple_alpha_range
+from block_utils import pkcs7_pad, encrypt_aes_manual_cbc, decrypt_aes_manual_cbc
+from text_utils import in_simple_alpha_range
 from xor_utils import buffer_xor
 
 aeskey = random.randbytes(16)
@@ -29,7 +27,7 @@ def receiver_decrypt_data( token:bytes ):
     
     # ASCII Check
     for c in bytearray(pt):
-        if( in_simple_alpha_range(c) == False ):
+        if( not in_simple_alpha_range(c) ):
             print("Error, illegal byte detected: ")
             print(pt.hex())
             break

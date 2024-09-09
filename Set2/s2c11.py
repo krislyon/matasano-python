@@ -1,17 +1,14 @@
 # Matasano Crypto Challenges
 # Set 2, Challenge 11 - ECB/CBC detection Oracle
 #
-from Crypto.Cipher import AES
 import sys
-import base64
 import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from block_utils import pkcs7_pad, pkcs7_unpad, split_blocks, encrypt_aes_manual_cbc, encrypt_aes_ecb, detect_ecb
-from text_utils import hexdump
+from block_utils import pkcs7_pad, encrypt_aes_manual_cbc, encrypt_aes_ecb, detect_ecb
 
 def encrypt_with_random_key( plaintext:bytes ) -> bytes:
     data = bytearray()

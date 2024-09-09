@@ -17,7 +17,7 @@ def sha1_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xEFCDAB89, STATE_
     message = bytearray(message)
 
     # Apply padding if it was passed (for forgery), otherwise calculate it and apply it.
-    if( forcelen != False ):
+    if( forcelen ):
         ml = forcelen * 8
     else:
         ml = len(message) * 8  # original message length in bits

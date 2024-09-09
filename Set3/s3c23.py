@@ -9,7 +9,6 @@ if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 import mt19937 as mt
 import random
-import time
 
 
 

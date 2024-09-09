@@ -8,7 +8,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from sha1_utils import sha1_keyed_mac, sha1_hash_set_state, sha1_generate_padding, sha1_keyed_mac_validate, sha1_recover_state, sha1_hash
+from sha1_utils import sha1_keyed_mac, sha1_hash_set_state, sha1_generate_padding, sha1_keyed_mac_validate, sha1_recover_state
 
 def get_random_word(file_path):
     # Open and read the file

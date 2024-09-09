@@ -2,16 +2,13 @@
 # Set 1, Challenge 7 - AES ECB Mode
 #
 import base64
-import binascii
 import sys
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from text_utils import hexdump
 from block_utils import pkcs7_unpad
-
 from Crypto.Cipher import AES
 
 def load_data( filename: str ) -> bytes:

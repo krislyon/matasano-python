@@ -9,7 +9,7 @@ UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
 from typing import Dict
-from block_utils import pkcs7_pad, pkcs7_unpad, encrypt_aes_ecb, decrypt_aes_ecb, detect_ecb
+from block_utils import pkcs7_pad, pkcs7_unpad, encrypt_aes_ecb, decrypt_aes_ecb
 
 aeskey = random.randbytes(16)
 
@@ -54,7 +54,7 @@ block1 = p1ciphertext[0:16]
 block2 = p1ciphertext[16:32]
 
 # Part2: email=xxxxxxxxxx adminPPPPPPPPPPP &uid=10&role=use r    // keep block 2.
-p2ciphertext = oracle( 'aaaaaaaaaaadmin\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b' );
+p2ciphertext = oracle( 'aaaaaaaaaaadmin\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b\x0b' )
 block3 = p2ciphertext[16:32]
 
 crafted_ciphertext = bytearray()

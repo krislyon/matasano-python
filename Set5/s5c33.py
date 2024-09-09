@@ -7,7 +7,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from dh_utils import *
+from dh_utils import NIST_G, NIST_P, dh_create_key_exchg_data, dh_create_shared_secret, dhs_create_key_exchg_data, dhs_create_shared_secret
 
 def sample_key_exchg_simple(p:int,g:int,debug=False):
     print(f'p: {p}, g: {g}')

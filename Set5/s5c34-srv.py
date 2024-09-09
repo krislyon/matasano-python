@@ -52,32 +52,37 @@ def handleKeyExchange():
     dh_g = bytes.fromhex( request.args.get('g') )
     dh_A = bytes.fromhex( request.args.get('A') )
 
-    if( dh_p == None ):
+    if( dh_p is None ):
         api_error = {'error':50001, 'message':'Missing key exhchange parameter: p'}
         return (jsonify(api_error), 500)
 
-    if( dh_g == None ):
+    if( dh_g is None ):
         api_error = {'error':50002, 'message':'Missing key exhchange parameter: g'}
         return (jsonify(api_error), 500)
 
-    if( dh_A == None ):
+    if( dh_A is None ):
         api_error = {'error':50003, 'message':'Missing key exhchange parameter: A'}
         return (jsonify(api_error), 500)
 
     session_id = random.randbytes(16)
-    if( debug ): print(f'Created session: {session_id.hex()}\n')
+    if( debug ): 
+        print(f'Created session: {session_id.hex()}\n')
 
     session_iv = random.randbytes(16)
-    if( debug ): print(f'Created IV: {session_iv.hex()}\n')
+    if( debug ): 
+        print(f'Created IV: {session_iv.hex()}\n')
 
     (srv_pub, srv_priv) = dh_utils.dh_create_key_exchg_data( dh_p, dh_g )
-    if( debug ): print(f'Server created keypair: {srv_pub.hex()}\n\n{srv_priv.hex()}\n')
+    if( debug ): 
+        print(f'Server created keypair: {srv_pub.hex()}\n\n{srv_priv.hex()}\n')
 
     shared_secret = dh_utils.dh_create_shared_secret( srv_priv, dh_A , dh_p )
-    if( debug ): print(f'Server created shared secret: {shared_secret.hex()}\n')
+    if( debug ): 
+        print(f'Server created shared secret: {shared_secret.hex()}\n')
 
     session_key = derive_key( shared_secret )
-    if( debug ): print(f'Server created session key: {session_key.hex()}\n')
+    if( debug ): 
+        print(f'Server created session key: {session_key.hex()}\n')
 
     print(f'session-id:\t{session_id.hex()}')
     print(f'key:\t\t{session_key.hex()}')
@@ -97,17 +102,17 @@ def handleSecureMessage():
     # print(f'session-id: {session_id.hex()}')
     # print(f'cipher-text: {ct.hex()}')
 
-    if( session_id == None ):
+    if( session_id is None ):
         api_error = {'error':50004, 'message':'Missing session identifier'}
         return (jsonify(api_error), 500)
 
-    if( ct == None ):
+    if( ct is None ):
         api_error = {'error':50005, 'message':'Missing message data'}
         return (jsonify(api_error), 500)
 
     session = sessions.get(session_id.hex())
         
-    if( session == None ):
+    if( session is None ):
         api_error = {'error':50006, 'message':'Session not found.'}
         return (jsonify(api_error), 500)
 

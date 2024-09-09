@@ -1,6 +1,5 @@
-import math
 from typing import Tuple,Dict,Generator
-from text_utils import *
+from text_utils import bitwise_hamming_distance, ascii_range_score
 
 MAX_KEY_SIZE = 40
 
@@ -34,7 +33,6 @@ def repeating_key_xor( buf1:bytes, keyString:str ) -> bytes:
 
 def transpose_data_blocks( data:bytes, blocksize:int ) -> list[bytes]: 
     datalen = len(data)
-    nBlocks = (datalen/blocksize) + 1
     transposed_blocks = []
     for i in range(blocksize):
         block = []
@@ -64,7 +62,7 @@ def calculate_xor_keysize( ciphertext:bytes, max_key_size:int=MAX_KEY_SIZE, debu
                     bitwise_hamming_distance(strA,strD) + 
                     bitwise_hamming_distance(strB,strC) + 
                     bitwise_hamming_distance(strB,strD) + 
-                    bitwise_hamming_distance(strC,strD))/6;
+                    bitwise_hamming_distance(strC,strD))/6
 
         ksize_results[ksize] = avgdist
 
@@ -85,7 +83,6 @@ def recover_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> b
     for idx,block in enumerate(transposed_data_blocks):
         max_score = 0
         max_key = 0
-        max_result = ""      
     
         for i in range(256):
             key_guess = create_xor_key( i, len(block) )
@@ -95,7 +92,6 @@ def recover_xor_key( transposed_data_blocks:list[bytes], debug:bool=False ) -> b
             if( score > max_score ):
                 max_score = score
                 max_key = i
-                max_result = result
 
         recovered_key.append( max_key )
 

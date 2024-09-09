@@ -8,7 +8,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from xor_utils import *
+from xor_utils import calculate_xor_keysize, transpose_data_blocks, recover_xor_key, buffer_xor, RepeatingKeyGenerator
 
 def load_data( filename ):
     module_dir = os.path.dirname(os.path.abspath(__file__)) 

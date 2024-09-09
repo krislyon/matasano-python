@@ -3,7 +3,6 @@
 #
 import sys
 import base64
-import os
 import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,7 +33,7 @@ def padding_oracle( ciphertext, attack_iv ):
     try:
         pkcs7_unpad( pt, True )
         return True
-    except:
+    except Exception:
         return False
 
 
@@ -107,7 +106,7 @@ for text in range(0,len(plaintexts)):
 
         try:
             recovered_blocks.append( pkcs7_unpad(recovered_block,True) )
-        except:
+        except Exception:
             recovered_blocks.append( recovered_block )
 
     result = bytearray()

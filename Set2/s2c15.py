@@ -2,8 +2,6 @@
 # Set 2, Challenge 15 - PKCS#7 Padding Validation
 #
 import sys
-import base64
-import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )

@@ -2,16 +2,13 @@
 # Set 2, Challenge 16 - CBC BitFlipping Attacks
 #
 import sys
-import base64
 import random
 import os
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from typing import Dict,Callable
 from block_utils import pkcs7_pad, pkcs7_unpad, encrypt_aes_manual_cbc, decrypt_aes_manual_cbc
-from text_utils import hexdump
 
 aeskey = random.randbytes(16)
 iv = random.randbytes(16)

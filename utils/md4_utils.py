@@ -6,7 +6,7 @@ def md4_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xefcdab89, STATE_C
 
     def md4_pad( message, forced_length=False ):
         padded = bytearray(message)
-        if( forced_length != False ):
+        if( not forced_length ):
             ml = forced_length * 8
             print(f'Forcing Length: {forced_length}')
         else:

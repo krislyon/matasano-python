@@ -8,7 +8,7 @@ MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-from md4_utils import md4_keyed_mac, md4_hash_set_state, md4_generate_padding, md4_keyed_mac_validate, md4_recover_state, md4_hash
+from md4_utils import md4_keyed_mac, md4_hash_set_state, md4_generate_padding, md4_keyed_mac_validate, md4_recover_state
 
 def get_random_word(file_path):
     # Open and read the file
