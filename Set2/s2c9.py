@@ -1,39 +1,25 @@
 # Matasano Crypto Challenges
 # Set 2, Challenge 9 - Implement PKCS#7 Padding
 #
-print('Matasano Crypto Challenges')
-print('Set 2, Challenge 9 - Implement PKCS#7 Padding')
-print('------------------------------------------')
+import sys
+import os
+MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
+UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
+if( UTILS_DIR not in sys.path ):
+    sys.path.append( UTILS_DIR )
+from block_utils import pkcs7_pad
 
-def pkcs7_pad( plaintext:bytes, blocksize:int=16 ) -> bytes:
-    data = bytearray(plaintext)
-    ptlen = len(plaintext) % blocksize
-    pad_byte = blocksize - ptlen
-    for i in range(pad_byte):
-        data.append(pad_byte)
-    return bytes(data)
+def run_challenge_9():
+    print('Matasano Crypto Challenges')
+    print('Set 2, Challenge 9 - Implement PKCS#7 Padding')
+    print('------------------------------------------')
+    results = {}
+    for i in range(16):
+        postfix = 'a' * i
+        results[i] = pkcs7_pad( bytes(f"YELLOW SUBMARINE{postfix}","utf-8") ).hex()
+        print( results[i] )
 
+    return results
 
-
-print( pkcs7_pad( bytes("YELLOW SUBMARINE","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaa","utf-8") ).hex() )
-
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaa","utf-8") ).hex() )
-
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaa","utf-8") ).hex() )
-
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaa","utf-8") ).hex() )
-
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaa","utf-8") ).hex() )
-print( pkcs7_pad( bytes("YELLOW SUBMARINEaaaaaaaaaaaaaaaaa","utf-8") ).hex() )
+if __name__ == '__main__':
+    run_challenge_9()
