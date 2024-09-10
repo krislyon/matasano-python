@@ -7,6 +7,7 @@ if( SET2_DIR not in sys.path ):
 from s2c9 import run_challenge_9
 from s2c10 import run_challenge_10
 from s2c11 import run_challenge_11
+from s2c12 import run_challenge_12
 
 def test___set2___challenge_9():
     expected = ["59454c4c4f57205355424d4152494e4510101010101010101010101010101010", 
@@ -38,3 +39,8 @@ def test___set2___challenge_11():
     results = run_challenge_11()
     for result in results:
         assert result[0] == result[1]
+
+def test___set2___challenge_12():
+    result = run_challenge_12()
+    assert result.endswith('Did you stop? No, I just drove by\x0A')
+ 
