@@ -25,23 +25,28 @@ def is_admin( token:bytes ):
     pt = decrypt_aes_manual_cbc( token, aeskey, iv )
     pt = pkcs7_unpad( pt )
     if bytes(";admin=true","utf-8") in pt:
-        return True
+        return (True,pt)
     else:
-        return False
+        return (False,pt)
        
+def run_challenge_16():
+    print('Matasano Crypto Challenges')
+    print('Set 2, Challenge 16 - CBC BitFlipping Attacks')
+    print('------------------------------------------')
 
-print('Matasano Crypto Challenges')
-print('Set 2, Challenge 16 - CBC BitFlipping Attacks')
-print('------------------------------------------')
 
+    attack_input = "XXXXXXXXXXXXXXXXXXXXX\x3aadmin\x3ctrue"
+    token = create_token( attack_input )
 
-attack_input = "XXXXXXXXXXXXXXXXXXXXX\x3aadmin\x3ctrue"
-token = create_token( attack_input )
-    
-modified_token = bytearray(token)
-modified_token[37] = modified_token[37] ^ 0x3a      
-modified_token[37] = modified_token[37] ^ 0x3b      
-modified_token[43] = modified_token[43] ^ 0x3c      
-modified_token[43] = modified_token[43] ^ 0x3d      
+    modified_token = bytearray(token)
+    modified_token[37] = modified_token[37] ^ 0x3a      
+    modified_token[37] = modified_token[37] ^ 0x3b      
+    modified_token[43] = modified_token[43] ^ 0x3c      
+    modified_token[43] = modified_token[43] ^ 0x3d      
 
-print("Admin: " + str(is_admin( bytes(modified_token) )))
+    ( result, pt ) = is_admin( bytes(modified_token) )
+    print("Admin: " + str(result))
+    return pt
+
+if __name__ == '__main__':
+    run_challenge_16()
