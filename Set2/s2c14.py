@@ -66,6 +66,7 @@ def detect_length_random_bytes( blocksize:int=16 ):
             return (dup_block_num * blocksize) - (count-2*blocksize)   
    
 def recover_block( junk_offset:int, junk_blocks:int, blocknum:int, recovered_data:bytes, blocksize:int, recovery_target:int=0 ):
+    done = False
     recovered_block = bytearray()
 
     for byte_num in range(1,blocksize+1):
@@ -107,11 +108,12 @@ def recover_block( junk_offset:int, junk_blocks:int, blocknum:int, recovered_dat
         recovered_block.append(pt[15]) 
 
     if recovery_target != 0 and len(recovered_block) != blocksize:
+        done = True
         pad = blocksize - len(recovered_block)
         for i in range(pad):
             recovered_block.append(pad)
 
-    return bytes(recovered_block)
+    return ( bytes(recovered_block), done )
 
 def run_challenge_14():
     print('Matasano Crypto Challenges')
@@ -131,6 +133,7 @@ def run_challenge_14():
     using_ecb = detect_ecb( oracle( prefix ) )
     print('ECB Detected:\t\t' + str(using_ecb))
     print('')
+
     # Detect Random Byte Length
     rand_byte_length = detect_length_random_bytes()
     print('Random Byte Count Detected:\t' + str(rand_byte_length) )
@@ -143,19 +146,22 @@ def run_challenge_14():
     junk_count = 0
     while (rand_byte_length + junk_count) % blocksize != 0:
         junk_count += 1
-    print('Junk Byte Count:\t\t' + str(junk_count) )
+    print(f'Junk Byte Count:\t\t{junk_count}' )
     junk_blocks = int( (rand_byte_length + junk_count) / blocksize )
-    print('Junk Blocks (skip):\t\t' + str(junk_blocks) )
+    print(f'Junk Blocks (skip):\t\t{junk_blocks}')
 
     # Decrypt with Attack
     recovered_data = bytearray()  
-    for blocknum in range( junk_blocks, block_count ):
-        result = recover_block( junk_count, junk_blocks, blocknum, bytes(recovered_data), blocksize, recv_length )
-        recovered_data.extend( result )
-        print('Block ' + str(blocknum) + ' Complete: \t' + result.hex() )
+    print(f'Recovering: range({junk_blocks},{block_count})')
+    done = False
+    for blocknum in range( junk_blocks, block_count+1 ):
+        if not done:
+            (result,done) = recover_block( junk_count, junk_blocks, blocknum, bytes(recovered_data), blocksize, recv_length )
+            recovered_data.extend( result )
+            print(f'Block {blocknum} Complete: \t' + result.hex() )
 
-    print()
-    result = pkcs7_unpad( recovered_data ).decode('utf-8')
+    print( recovered_data )
+    result = pkcs7_unpad( recovered_data, True ).decode('utf-8')
     print( result )
     return result
 
