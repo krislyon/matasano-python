@@ -43,7 +43,7 @@ def test___set3___challenge_18():
 def test___set3___challenge_21():
     run_challenge_21()
 
-@pytest.mark.long
+@pytest.mark.slow
 def test___set3___challenge_22():
     run_challenge_22(40)
 
@@ -52,7 +52,7 @@ def test___set3___challenge_23():
     for a,b in zip( orig, cloned ):
         assert a == b
 
-@pytest.mark.long
+@pytest.mark.slow
 def test___set3___challenge_24():
     (expected, result) = run_challenge_24()
     assert result == expected
