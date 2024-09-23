@@ -14,7 +14,6 @@ from stream_utils import encrypt_aes_ctr, AesCtrKeystreamGenerator
 from text_utils import in_ascii_alpha_range
 from freq_utils import digraph_dict
 
-
 def load_base64_data( filename: str ) -> bytes:
     module_dir = os.path.dirname(os.path.abspath(__file__)) 
     filepath = os.path.join( module_dir, filename )
@@ -53,7 +52,7 @@ def single_byte_recovery(texts,count,max_length):
         result[target_byte_idx] = sorted_guess_list[0:count]
     return result
 
-def perform_digraph_enhancement( sb_result, texts, max_length ):
+def perform_digraph_enhancement( sb_result, texts, max_length, ciphertexts ):
     result = {}
     guess_count = len(sb_result[0])
 
@@ -87,35 +86,38 @@ def perform_digraph_enhancement( sb_result, texts, max_length ):
     return [result[k] for k in sorted( result.keys() )]
 
 
+def run_challenge_19():
+        
+    print('Matasano Crypto Challenges')
+    print('Set 3, Challenge 19 - Break fixed-nonce CTR mode using substitutions')
+    print('--------------------------------------------------------------------')
 
-print('Matasano Crypto Challenges')
-print('Set 3, Challenge 19 - Break fixed-nonce CTR mode using substitutions')
-print('--------------------------------------------------------------------')
+    plaintexts = load_base64_data("s3c19.dat")
+    ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
 
-plaintexts = load_base64_data("s3c19.dat")
-ciphertexts = [encrypt_aes_ctr( pt, aeskey, bytes.fromhex("0000000000000000")) for pt in plaintexts]
+    ## Determine the max-length ciphertext
+    max_ct_len = 0
+    for ct in ciphertexts:
+        if len(ct) > max_ct_len:
+            max_ct_len = len(ct)
+    print('max_ct_len: ' + str(max_ct_len))
 
-## Determine the max-length ciphertext
-max_ct_len = 0
-for ct in ciphertexts:
-    if len(ct) > max_ct_len:
-        max_ct_len = len(ct)
-print('max_ct_len: ' + str(max_ct_len))
+    ## Recover the keystream via stat analysis
+    sb_result = single_byte_recovery( ciphertexts, 5, max_ct_len )
+    recovered_key_stream = perform_digraph_enhancement( sb_result, ciphertexts, max_ct_len, ciphertexts )
 
-## Recover the keystream via stat analysis
-sb_result = single_byte_recovery( ciphertexts, 5, max_ct_len )
-recovered_key_stream = perform_digraph_enhancement( sb_result, ciphertexts, max_ct_len )
+    ## Compare against actual.
+    key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
+    actual_key_stream = list(itertools.islice(key_stream_gen,38))
 
-## Compare against actual.
-key_stream_gen = AesCtrKeystreamGenerator(aeskey,bytes.fromhex("0000000000000000"))
-actual_key_stream = list(itertools.islice(key_stream_gen,38))
+    sum = 0  
+    for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
+        sum += v
 
-sum = 0  
-for v in [ (1 if a == r else 0) for a,r in zip(actual_key_stream,recovered_key_stream) ]:
-    sum += v
-
-print( "Recovered:\t" + str(recovered_key_stream) )
-print( "Actual:\t\t" + str(actual_key_stream ) )
-print( "Match Rate:\t" + str(sum/(max_ct_len-1)))
+    print( "Recovered:\t" + str(recovered_key_stream) )
+    print( "Actual:\t\t" + str(actual_key_stream ) )
+    print( "Match Rate:\t" + str(sum/(max_ct_len-1)))
 
 
+if __name__ == '__main__':
+    run_challenge_19()

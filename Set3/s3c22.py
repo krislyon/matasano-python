@@ -11,13 +11,13 @@ import mt19937 as mt
 import random
 import time
 
-def getRNGOutput( count ):
+def getRNGOutput( count, wait_time_max ):
     seed = int(time.time())
-    waittime =  random.randint(20,1000)
+    waittime =  random.randint(20, wait_time_max )
     print('Waiting for: ' + str(waittime))
     time.sleep( waittime )
     rng = mt.MT19937(seed)
-    return [rng.rand32() for i in range(count)]
+    return ([rng.rand32() for i in range(count)], seed )
 
 def recoverTimeSeed( known_output ):
     print('Beginning Recovery.')
@@ -35,18 +35,22 @@ def recoverTimeSeed( known_output ):
             print('Recovery Completed in: ' + str(endTime- startTime) )
             return seed
 
+def run_challenge_22( wait_time_max=1000):
+    print('Matasano Crypto Challenges')
+    print('Set 3, Challenge 22 - Crack an MT19937 seed')
+    print('-------------------------------------------')
 
-print('Matasano Crypto Challenges')
-print('Set 3, Challenge 22 - Crack an MT19937 seed')
-print('-------------------------------------------')
 
+    (output,secret_seed) = getRNGOutput( 100, wait_time_max )
+    rseed = recoverTimeSeed( output )
 
-output = getRNGOutput( 100 )
-rseed = recoverTimeSeed( output )
+    rng = mt.MT19937(rseed)
+    recovered = [rng.rand32() for i in range(5)]
 
-rng = mt.MT19937(rseed)
-recovered = [rng.rand32() for i in range(5)]
+    for i in range(5):
+        print('Stream:' + str(output[i]) + ', Recovered: ' + str(recovered[i]) )
 
-for i in range(5):
-    print('Stream:' + str(output[i]) + ', Recovered: ' + str(recovered[i]) )
+    return rseed, secret_seed
 
+if __name__ == '__main__':
+    run_challenge_22()

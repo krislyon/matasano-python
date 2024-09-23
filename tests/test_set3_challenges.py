@@ -1,5 +1,6 @@
 import sys
 import os
+import pytest
 MODULE_DIR = os.path.dirname(os.path.abspath(__file__))
 SET3_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../Set3') )
 if( SET3_DIR not in sys.path ):
@@ -7,8 +8,13 @@ if( SET3_DIR not in sys.path ):
 UTILS_DIR  = os.path.abspath( os.path.join( MODULE_DIR, '../utils') )
 if( UTILS_DIR not in sys.path ):
     sys.path.append( UTILS_DIR )
-
+ 
 from s3c17 import run_challenge_17
+from s3c18 import run_challenge_18
+from s3c21 import run_challenge_21
+from s3c22 import run_challenge_22
+from s3c23 import run_challenge_23
+from s3c24 import run_challenge_24
 
 def test___set3___challenge_17():
     expected = [
@@ -27,10 +33,26 @@ def test___set3___challenge_17():
     for res, exp in zip( results, expected ):
         assert res == exp
 
-# def test___set3___challenge_18:
+def test___set3___challenge_18():
+    result = run_challenge_18()
+    assert result == "Yo, VIP Let's kick it Ice, Ice, baby Ice, Ice, baby "
+
 # def test___set3___challenge_19:
 # def test___set3___challenge_20:
-# def test___set3___challenge_21:
-# def test___set3___challenge_22:
-# def test___set3___challenge_23:
-# def test___set3___challenge_24:
+
+def test___set3___challenge_21():
+    run_challenge_21()
+
+@pytest.mark.long
+def test___set3___challenge_22():
+    run_challenge_22(40)
+
+def test___set3___challenge_23():
+    (orig,cloned) = run_challenge_23()
+    for a,b in zip( orig, cloned ):
+        assert a == b
+
+@pytest.mark.long
+def test___set3___challenge_24():
+    (expected, result) = run_challenge_24()
+    assert result == expected
