@@ -11,6 +11,8 @@ if( UTILS_DIR not in sys.path ):
  
 from s3c17 import run_challenge_17
 from s3c18 import run_challenge_18
+from s3c19 import run_challenge_19
+from s3c20 import run_challenge_20
 from s3c21 import run_challenge_21
 from s3c22 import run_challenge_22
 from s3c23 import run_challenge_23
@@ -37,8 +39,11 @@ def test___set3___challenge_18():
     result = run_challenge_18()
     assert result == "Yo, VIP Let's kick it Ice, Ice, baby Ice, Ice, baby "
 
-# def test___set3___challenge_19:
-# def test___set3___challenge_20:
+def test___set3___challenge_19():
+    run_challenge_19()
+
+def test___set3___challenge_20():
+    run_challenge_20()
 
 def test___set3___challenge_21():
     run_challenge_21()
