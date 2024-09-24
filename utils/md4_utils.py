@@ -166,13 +166,12 @@ def md4_generate_padding( message_length ):
     dummymsg += struct.pack('<Q', ml) 
     return bytes(dummymsg[message_length:])
 
+def md4_run_test_vector( input, expected ):
+    output = md4_hash(input,debug_state=False).hex()
+    print(f"{"Success" if output == expected else "Failure"} --- md4({input}): '{output}', expected: '{expected}' ")
+    assert expected == output
+
 if __name__ == "__main__":
-
-    def md4_run_test_vector( input, expected ):
-        output = md4_hash(input,debug_state=False).hex()
-        print(f"{"Success" if output == expected else "Failure"} --- md4({input}): '{output}', expected: '{expected}' ")
-        print()
-
     md4_run_test_vector( b"", "31d6cfe0d16ae931b73c59d7e0c089c0" )
     md4_run_test_vector( b"a","bde52cb31de33e46245e05fbdbd6fb24" )
     md4_run_test_vector( b"abc","a448017aaf21d8525fc10ae87aa6729d" )

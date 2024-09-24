@@ -134,17 +134,18 @@ def sha1_generate_padding( message_length ):
     dummymsg += struct.pack('>Q', ml)  
     return bytes(dummymsg[message_length:])
 
+def sha1_run_test_vector( input, expected ):
+    output = sha1_hash(input,debug_state=False).hex()
+    print(f"{"Success" if output == expected else "Failure"} --- sha1({input}): '{output}', expected: '{expected}' ")
+    assert output == expected
+
+def sha1_hmac_run_test_vector( input, key, expected ):
+    output = sha1_hmac(input,key).hex()
+    print(f"{"Success" if output == expected else "Failure"} --- hmac-sha1({input}): '{output}', expected: '{expected}' ")
+    assert output == expected
+
+
 if __name__ == "__main__":
-
-    def sha1_run_test_vector( input, expected ):
-        output = sha1_hash(input,debug_state=False).hex()
-        print(f"{"Success" if output == expected else "Failure"} --- sha1({input}): '{output}', expected: '{expected}' ")
-
-    def sha1_hmac_run_test_vector( input, key, expected ):
-        output = sha1_hmac(input,key).hex()
-        print(f"{"Success" if output == expected else "Failure"} --- hmac-sha1({input}): '{output}', expected: '{expected}' ")
-
-
     sha1_run_test_vector( b"", "da39a3ee5e6b4b0d3255bfef95601890afd80709" )
     sha1_run_test_vector( b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq","84983e441c3bd26ebaae4aa1f95129e5e54670f1" )
     sha1_run_test_vector( b"abc","a9993e364706816aba3e25717850c26c9cd0d89d" )
