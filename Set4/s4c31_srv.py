@@ -12,8 +12,11 @@ if( UTILS_DIR not in sys.path ):
 from flask import Flask, jsonify, request
 from sha1_utils import sha1_hmac
 
-file_path = '/usr/share/dict/words'
+app = Flask(__name__)
+timeout = 0.05
+apiVersion = 1
 
+file_path = '/usr/share/dict/words'
 def get_random_word(file_path):
     # Open and read the file
     with open(file_path, 'r') as file:
@@ -31,17 +34,18 @@ def insecure_compare( calcuated, expected, timeout ):
             time.sleep(timeout)
     return True
 
-print('Matasano Crypto Challenges')
-print('Set 4, Challenge 31 (Server) - Break a HMAC-SHA1 with artificial timing leak')
-print('----------------------------------------------------------------------------')
-timeout = 0.05
-apiVersion = 1
-print(f'Comparison Timeout: {timeout}')
-print(f'API Verion: {apiVersion}')
-print()
-
 hmac_key_bytes = bytes(get_random_word(file_path),"utf-8")
-app = Flask(__name__)
+
+def run_challenge_31_srv():
+    print('Matasano Crypto Challenges')
+    print('Set 4, Challenge 31 (Server) - Break a HMAC-SHA1 with artificial timing leak')
+    print('----------------------------------------------------------------------------')
+
+    print(f'Comparison Timeout: {timeout}')
+    print(f'API Verion: {apiVersion}')
+    print()
+    app.run()
+
 
 @app.route('/hmac', methods=['GET'])
 def hmac():
@@ -71,5 +75,4 @@ def validate():
         return (jsonify({'result': 500, 'apiVersion': apiVersion }), 500)
 
 if __name__ == '__main__':
-    app.run()
-
+    run_challenge_31_srv()

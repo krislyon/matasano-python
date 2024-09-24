@@ -21,7 +21,6 @@ def get_random_word(file_path):
 
 
 def forge_keyed_mac( orig_message, orig_keyed_mac, keylen_guess ):
-
     addition = ";admin=true"
     (a,b,c,d,e) = sha1_recover_state( orig_keyed_mac )
 
@@ -39,33 +38,40 @@ def forge_keyed_mac( orig_message, orig_keyed_mac, keylen_guess ):
 
     return ( bytes(forged_message_ba), forged_keyed_mac )
 
+def run_challenge_29( mac_key=False ):
+    print('Matasano Crypto Challenges')
+    print('Set 4, Challenge 29 - Break a SHA-1 keyed MAC using length extension')
+    print('-------------------------------------------------')
 
-print('Matasano Crypto Challenges')
-print('Set 4, Challenge 29 - Break a SHA-1 keyed MAC using length extension')
-print('-------------------------------------------------')
+    # Specify the path to the words file
+    file_path = '/usr/share/dict/words'
+    original_message_bytes = bytes("comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon","utf-8")
 
-# Specify the path to the words file
-file_path = '/usr/share/dict/words'
-original_message_bytes = bytes("comment1=cooking%20MCs;userdata=foo;comment2=%20like%20a%20pound%20of%20bacon","utf-8")
+    if( mac_key ):
+        mac_key_bytes = bytes(mac_key,'utf-8')
+    else:
+        mac_key_bytes = bytes(get_random_word(file_path),"utf-8")
 
-mac_key_bytes = bytes(get_random_word(file_path),"utf-8")
+    original_mac = sha1_keyed_mac( original_message_bytes, mac_key_bytes )
+    original_validation = sha1_keyed_mac_validate( original_message_bytes, mac_key_bytes, original_mac )
+    print(f"Random Key:\t\t\t{mac_key_bytes.decode("utf-8")}")
+    print(f"Original Message:\t\t{original_message_bytes.decode("utf-8")}")
+    print(f"Original Message MAC:\t\t{original_mac.hex()}" )
+    print(f"Validate Original MAC:\t\t{ "***** SUCCESS *****" if original_validation else "Validation Failed." }")
 
-original_mac = sha1_keyed_mac( original_message_bytes, mac_key_bytes )
-original_validation = sha1_keyed_mac_validate( original_message_bytes, mac_key_bytes, original_mac )
-print(f"Random Key:\t\t\t{mac_key_bytes.decode("utf-8")}")
-print(f"Original Message:\t\t{original_message_bytes.decode("utf-8")}")
-print(f"Original Message MAC:\t\t{original_mac.hex()}" )
-print(f"Validate Original MAC:\t\t{ "***** SUCCESS *****" if original_validation else "Validation Failed." }")
+    for keylen in range(0,20):
+        (forged_message_bytes,forged_mac) = forge_keyed_mac( original_message_bytes, original_mac, keylen )
+        forged_validation = sha1_keyed_mac_validate( forged_message_bytes, mac_key_bytes, forged_mac )
 
-for keylen in range(0,20):
+        print(f"\n\n---- Trying MAC Key Length: {keylen} ----")
+        print(f"Forged Message:\t\t\t{forged_message_bytes}")
+        print(f"Forged Message MAC:\t\t{forged_mac.hex()}" )
+        print(f"Validate Forged MAC:\t\t{ "***** SUCCESS *****" if forged_validation else "Validation Failed." }")
+        
+        if forged_validation:
+            return True
 
-    (forged_message_bytes,forged_mac) = forge_keyed_mac( original_message_bytes, original_mac, keylen )
-    forged_validation = sha1_keyed_mac_validate( forged_message_bytes, mac_key_bytes, forged_mac )
+    return False 
 
-    print(f"\n\n---- Trying MAC Key Length: {keylen} ----")
-    print(f"Forged Message:\t\t\t{forged_message_bytes}")
-    print(f"Forged Message MAC:\t\t{forged_mac.hex()}" )
-    print(f"Validate Forged MAC:\t\t{ "***** SUCCESS *****" if forged_validation else "Validation Failed." }")
-    
-    if forged_validation:
-        break
+if __name__ == '__main__':
+    run_challenge_29()

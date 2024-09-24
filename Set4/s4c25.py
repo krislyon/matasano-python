@@ -33,27 +33,25 @@ def edit_aes_ctr( ciphertext:bytes, key:bytes, offset:int, plaintext:bytes, nonc
     ct[offset:end_idx] = ciphertext_patch
     return bytes(ct)
 
-print('Matasano Crypto Challenges')
-print('Set 4, Challenge 25 - Break "random access read/write" AES CTR')
-print('--------------------------------------------------------------')
+def run_challenge_25():
+    print('Matasano Crypto Challenges')
+    print('Set 4, Challenge 25 - Break "random access read/write" AES CTR')
+    print('--------------------------------------------------------------')
 
-pt = load_base64_data('s4c25.dat')
-ct = encrypt_aes_ctr(pt,aeskey,nonce)
+    pt = load_base64_data('s4c25.dat')
+    ct = encrypt_aes_ctr(pt,aeskey,nonce)
 
-### Recover the keysteam
-recovery_pt = bytes([0xff for i in range(len(ct))])
-new_ct = edit_aes_ctr( ct, aeskey, 0, recovery_pt, nonce )
-recovered_keystream = buffer_xor( new_ct, recovery_pt )
+    ### Recover the keysteam
+    recovery_pt = bytes([0xff for i in range(len(ct))])
+    new_ct = edit_aes_ctr( ct, aeskey, 0, recovery_pt, nonce )
+    recovered_keystream = buffer_xor( new_ct, recovery_pt )
 
-#### Recover the data
-recovered_plaintext = buffer_xor( ct, recovered_keystream )
-print( recovered_plaintext.decode('utf-8') )
+    #### Recover the data
+    recovered_plaintext = buffer_xor( ct, recovered_keystream ).decode('utf-8')
+    print( recovered_plaintext )
+    return recovered_plaintext
 
-
-
-
-
-
-
+if __name__ == '__main__':
+    run_challenge_25()
 
 

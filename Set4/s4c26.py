@@ -30,26 +30,32 @@ def is_admin( token:bytes ):
         return True
     else:
         return False
-       
-print('Matasano Crypto Challenges')
-print('Set 4, Challenge 26 - CTR BitFlipping Attacks')
-print('---------------------------------------------')
 
-# determine userdata_idx in ciphertext
-userdata_idx = 0
-ct_a = create_token( "A" )
-ct_b = create_token( "B" )
-userdata_idx = detect_diff_start( ct_a, ct_b )
-print("userdata_idx: " + str(userdata_idx))
+def run_challenge_26():       
+    print('Matasano Crypto Challenges')
+    print('Set 4, Challenge 26 - CTR BitFlipping Attacks')
+    print('---------------------------------------------')
 
-attack_input_1 = "FFFFFFFFFFFFFFF"
-attack_input_2 = bytes("ABCD;admin=true",'utf-8')
-token = create_token( attack_input_1 )
+    # determine userdata_idx in ciphertext
+    userdata_idx = 0
+    ct_a = create_token( "A" )
+    ct_b = create_token( "B" )
+    userdata_idx = detect_diff_start( ct_a, ct_b )
+    print("userdata_idx: " + str(userdata_idx))
 
-keystream = buffer_xor(token[userdata_idx:userdata_idx + len(attack_input_1)], bytes(attack_input_1,'utf-8') )
-patch = buffer_xor( keystream, attack_input_2  )
+    attack_input_1 = "FFFFFFFFFFFFFFF"
+    attack_input_2 = bytes("ABCD;admin=true",'utf-8')
+    token = create_token( attack_input_1 )
 
-modified_token = bytearray(token)
-modified_token[userdata_idx:userdata_idx + len(attack_input_1)] = patch
+    keystream = buffer_xor(token[userdata_idx:userdata_idx + len(attack_input_1)], bytes(attack_input_1,'utf-8') )
+    patch = buffer_xor( keystream, attack_input_2  )
 
-print("Admin: " + str(is_admin( bytes(modified_token) )))
+    modified_token = bytearray(token)
+    modified_token[userdata_idx:userdata_idx + len(attack_input_1)] = patch
+
+    admin_status = is_admin( bytes(modified_token) )
+    print(f"Admin: {admin_status}")
+    return admin_status
+
+if __name__ == '__main__':
+    run_challenge_26()

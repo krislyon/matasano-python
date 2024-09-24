@@ -40,6 +40,7 @@ def sample_key_exchg_simple(p:int,g:int,debug=False):
     print('--Bob-----------------------------------------------------------------')
     bob_secret = dhs_create_shared_secret(bob_priv, alice_pub, p, debug=debug)
     print(f'Bob creates session material:\t{hex(bob_secret)}')
+    assert alice_secret == bob_secret
 
 def sample_key_exchg(p:bytes, g:bytes, debug=False ):
     print(f'p: {p.hex()}, g: {g.hex()}')
@@ -73,17 +74,23 @@ def sample_key_exchg(p:bytes, g:bytes, debug=False ):
     bob_secret = dh_create_shared_secret(bob_priv, alice_pub, p, debug=debug)
     print(f'Bob creates session material:\t{bob_secret.hex()}')
 
-print()
-print('Matasano Crypto Challenges')
-print('Set 5, Challenge 33 - Implement Diffie Hellman')
-print('--------------------------------------------------------------------------')
+    assert alice_secret == bob_secret
 
-sample_key_exchg_simple(37,5)
+def run_challenge_33():
+    print()
+    print('Matasano Crypto Challenges')
+    print('Set 5, Challenge 33 - Implement Diffie Hellman')
+    print('--------------------------------------------------------------------------')
 
-print()
-print('**************************************************************************')
-print()
+    sample_key_exchg_simple(37,5)
 
-p = bytes.fromhex( NIST_P )
-g = bytes.fromhex( NIST_G )
-sample_key_exchg( p, g )
+    print()
+    print('**************************************************************************')
+    print()
+
+    p = bytes.fromhex( NIST_P )
+    g = bytes.fromhex( NIST_G )
+    sample_key_exchg( p, g )
+
+if __name__ == '__main__':
+    run_challenge_33()
