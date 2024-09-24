@@ -8,7 +8,7 @@ from block_utils import encrypt_aes_ecb
 from xor_utils import buffer_xor
 from mt19937 import MT19937Generator
 
-def AesCtrKeystreamGenerator( key, nonce:bytes ):
+def AesCtrKeystreamGenerator( key, nonce:bytes, endian="little" ):
     assert len(nonce)==8, "Nonce must be 64 bit value."
     ctr_counter = 0
     keybytes = bytes(16)
@@ -21,7 +21,7 @@ def AesCtrKeystreamGenerator( key, nonce:bytes ):
         if(key_idx > 15):
             pt = bytearray()
             pt.extend(nonce)
-            pt.extend(ctr_counter.to_bytes(8,"little"))
+            pt.extend(ctr_counter.to_bytes(8, endian ))
             keybytes = encrypt_aes_ecb( pt, key )
             ctr_counter += 1
             key_idx = 0       
