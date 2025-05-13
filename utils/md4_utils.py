@@ -48,10 +48,10 @@ def md4_hash_set_state( message, STATE_A=0x67452301, STATE_B=0xefcdab89, STATE_C
         DD = H[3]
 
         if( debug_state ):
-            print(f"Block\t{["0x{:08x}".format(block[a]) for a in range(0,4)]}" ) 
-            print(f"\t{["0x{:08x}".format(block[a]) for a in range(4,8)]}" ) 
-            print(f"\t{["0x{:08x}".format(block[a]) for a in range(8,12)]}" ) 
-            print(f"\t{["0x{:08x}".format(block[a]) for a in range(12,16)]}" ) 
+            print(f"Block\t{['0x{:08x}'.format(block[a]) for a in range(0,4)]}" ) 
+            print(f"\t{['0x{:08x}'.format(block[a]) for a in range(4,8)]}" ) 
+            print(f"\t{['0x{:08x}'.format(block[a]) for a in range(8,12)]}" ) 
+            print(f"\t{['0x{:08x}'.format(block[a]) for a in range(12,16)]}" ) 
             print()
             print(f"R0\t{[hex(a) for a in H]}")
 
@@ -168,7 +168,7 @@ def md4_generate_padding( message_length ):
 
 def md4_run_test_vector( input, expected ):
     output = md4_hash(input,debug_state=False).hex()
-    print(f"{"Success" if output == expected else "Failure"} --- md4({input}): '{output}', expected: '{expected}' ")
+    print(f"{'Success' if output == expected else 'Failure'} --- md4({input}): '{output}', expected: '{expected}' ")
     assert expected == output
 
 if __name__ == "__main__":

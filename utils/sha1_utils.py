@@ -136,12 +136,12 @@ def sha1_generate_padding( message_length ):
 
 def sha1_run_test_vector( input, expected ):
     output = sha1_hash(input,debug_state=False).hex()
-    print(f"{"Success" if output == expected else "Failure"} --- sha1({input}): '{output}', expected: '{expected}' ")
+    print(f"{'Success' if output == expected else 'Failure'} --- sha1({input}): '{output}', expected: '{expected}' ")
     assert output == expected
 
 def sha1_hmac_run_test_vector( input, key, expected ):
     output = sha1_hmac(input,key).hex()
-    print(f"{"Success" if output == expected else "Failure"} --- hmac-sha1({input}): '{output}', expected: '{expected}' ")
+    print(f"{'Success' if output == expected else 'Failure'} --- hmac-sha1({input}): '{output}', expected: '{expected}' ")
     assert output == expected
 
 

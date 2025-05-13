@@ -71,7 +71,7 @@ def perform_digraph_enhancement( sb_result, texts, max_length, ciphertexts ):
                         byte_b_guess = sb_result[target_byte_idx+1][j]['val']
                         ptA = ct[target_byte_idx] ^ byte_a_guess
                         ptB = ct[target_byte_idx+1] ^ byte_b_guess
-                        digraph_key = str(ptA.to_bytes(),"utf-8") + str(ptB.to_bytes(),"utf-8")
+                        digraph_key = str(ptA.to_bytes(1),"utf-8") + str(ptB.to_bytes(1),"utf-8")
                         freq = digraph_dict.get(digraph_key)
                         if( freq is not None ):
                             score += freq

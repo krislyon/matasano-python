@@ -55,10 +55,10 @@ def run_challenge_30( mac_key=False ):
 
     original_mac = md4_keyed_mac( original_message_bytes, mac_key_bytes, debug_state=False )
     original_validation = md4_keyed_mac_validate( original_message_bytes, mac_key_bytes, original_mac )
-    print(f"Random Key:\t\t\t{mac_key_bytes.decode("utf-8")}")
-    print(f"Original Message:\t\t{original_message_bytes.decode("utf-8")}")
+    print(f"Random Key:\t\t\t{mac_key_bytes.decode('utf-8')}")
+    print(f"Original Message:\t\t{original_message_bytes.decode('utf-8')}")
     print(f"Original Message MAC:\t\t{original_mac.hex()}" )
-    print(f"Validate Original MAC:\t\t{ "***** SUCCESS *****" if original_validation else "Validation Failed." }")
+    print(f"Validate Original MAC:\t\t{ '***** SUCCESS *****' if original_validation else 'Validation Failed.' }")
 
     for keylen in range(0,20):
 
@@ -68,7 +68,7 @@ def run_challenge_30( mac_key=False ):
         print(f"\n\n---- Trying MAC Key Length: {keylen} ----")
         print(f"Forged Message:\t\t\t{forged_message_bytes}")
         print(f"Forged Message MAC:\t\t{forged_mac.hex()}" )
-        print(f"Validate Forged MAC:\t\t{ "***** SUCCESS *****" if forged_validation else "Validation Failed." }")
+        print(f"Validate Forged MAC:\t\t{ '***** SUCCESS *****' if forged_validation else 'Validation Failed.' }")
 
         if forged_validation:
             return True
